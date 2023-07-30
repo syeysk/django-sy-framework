@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    {{ metric_system_code | safe }}
+    {% block start_of_head %}{% endblock %}
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="HandheldFriendly" content="true" />
     <meta name="MobileOptimized" content="320" />
     <meta name="description" content="{% block description %}{% endblock %}" />
     <meta name="keywords" content="{% block keywords %}{% endblock %}" />
-    <title>Ведение заметок | {% block page_title %}No content{% endblock %}</title>
+    <title>{% block site_title %}Framework{% endblock %} | {% block page_title %}No content{% endblock %}</title>
     <script src="{% static 'pages/extern/jquery-3.6.0.min.js' %}"></script>
     <link href="{% static 'pages/extern/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
     <script src="{% static 'pages/functions.js' %}?v=1"></script>
@@ -57,14 +57,7 @@
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Действия</a>
                 <ul class="dropdown-menu">
-                    {% url 'note_service_storage_list' as url %}
-                    <li>
-                        <a class="dropdown-item{% if request.path == url %} active{% endif %}" href="{{ url }}">Источники</a>
-                    </li>
-									  {% url 'note_import_export' as url %}
-                    <li>
-                        <a class="dropdown-item{% if request.path == url %} active{% endif %}" href="{{ url }}">Импорт/экспорт</a>
-                    </li>
+                    {% block menu_microservice %}{% endblock %}
                 </ul>
             </li>
             {# {% url 'service_server' as url %}#}
@@ -153,7 +146,7 @@
     </div>
 
     <div class="container">
-        <h1>{% block title %}No content{% endblock %}</h1>
+        <h1>{% block title %}No title{% endblock %}</h1>
         {% block content %}No content{% endblock %}
     </div>
 
@@ -165,12 +158,13 @@
                     &#8580; <a href="https://syeysk.ru" target="_blank">SYeysk</a>, 2023
                 </div>
                 <div>
-                    <a href="https://github.com/syeysk/django-sy-notes" target="_blank">GitHub</a>
+                    {% block source_code_link %}<a href="https://github.com/syeysk/django-sy-framework" target="_blank">GitHub</a>{% endblock %}
                 </div>
             </div>
          </div>
     </footer>
 
+    {% block end_of_body %}No content{% endblock %}
     <!--<script src="https://getbootstrap.com/docs/3.4/assets/js/ie10-viewport-bug-workaround.js"></script>-->
     <script src="{% static 'pages/extern/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
     <script>
