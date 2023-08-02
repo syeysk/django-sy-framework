@@ -1,7 +1,6 @@
 from rest_framework import authentication
-from rest_framework import exceptions
 
-from custom_auth.models import Token
+from django_sy_framework.custom_auth.models import Token
 
 class TokenAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):

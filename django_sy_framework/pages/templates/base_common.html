@@ -50,14 +50,14 @@
                   <img src="{% static 'logo.svg' %}" title="Главная страница" alt="логотип микросервиса" style="height:30px;">
                 </a>
             </li>
-            {% url 'note_list' as url %}
-            <li class="nav-item">
-                <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Заметки</a>
-            </li>
+            {# {% url 'note_list' as url %} #}
+            {# <li class="nav-item"> #}
+            {#     <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Заметки</a> #}
+            {# </li> #}
             <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Действия</a>
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{% block menu_microservice_name %}Microservice menu{% endblock %}</a>
                 <ul class="dropdown-menu">
-                    {% block menu_microservice %}{% endblock %}
+                    {% block menu_items_microservice %}{% endblock %}
                 </ul>
             </li>
             {# {% url 'service_server' as url %}#}

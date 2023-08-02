@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 
-from custom_auth.views import (
+from django_sy_framework.custom_auth.views import (
     AddTokenView,
     DeleteTokenView,
     EditTokenView,

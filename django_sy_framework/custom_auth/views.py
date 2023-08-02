@@ -13,8 +13,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-from custom_auth.models import ExternGoogleUser, Token, get_hash
-from custom_auth.serializers import (
+from django_sy_framework.custom_auth.models import ExternGoogleUser, Token, get_hash
+from django_sy_framework.custom_auth.serializers import (
     AddTokenSerializer,
     EditTokenSerializer,
     ExternRegistrationViewSerializer,

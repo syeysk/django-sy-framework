@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from custom_auth.models import ExternGoogleUser
+from django_sy_framework.custom_auth.models import ExternGoogleUser
 
 
 class ExternGoogleUserAdmin(admin.ModelAdmin):
