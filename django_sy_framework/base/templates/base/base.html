@@ -60,6 +60,10 @@
                     {% block menu_items_microservice %}{% endblock %}
                 </ul>
             </li>
+            {% url 'microservices' as url %}
+            <li class="nav-item">
+                <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Все приложения</a>
+            </li>
             {# {% url 'service_server' as url %}#}
             {#<li class="nav-item">#}
             {#    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Обслуживание сервера</a>#}
