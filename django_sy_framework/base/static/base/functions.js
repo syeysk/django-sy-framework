@@ -725,6 +725,13 @@ function toggle_password(img, field) {
 }
 
 /* Изменения от 2023-03-06 */
+function clear_status_fields(form) {
+    for (let field of form.elements) {
+        $(form).find('#'+field.name+'-group .help-block').remove();
+        $(form[field.name]).removeClass("is-invalid");
+    }
+}
+
 function set_valid_field(form, field_names) {
     for (let field_name of field_names) {
         $(form).find('#'+field_name+'-group .help-block').remove();
