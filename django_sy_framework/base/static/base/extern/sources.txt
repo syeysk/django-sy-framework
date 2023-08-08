@@ -4,7 +4,8 @@
 - https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js
 - https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js.map
 - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
-- https://unpkg.com/vue@3
+- https://unpkg.com/vue@3.2.45/dist/vue.global.js
+- https://unpkg.com/vue@3.2.45/dist/vue.global.prod.js
 
 Bootsrap icons:
 - https://icons.getbootstrap.com/#install
