@@ -10,3 +10,6 @@ description = "framework for microservice's ecosystem"
 
 [tool.setuptools.packages]
 find = {}
+
+[tool.setuptools]
+include-package-data = true
