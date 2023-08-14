@@ -6,7 +6,7 @@
 
 ### Изменения в settings.py
 
-Для использования фреймоврка необходимо добавить приложение `django_sy_framework.base` в `INSTALLED_APPS`
+Для использования фреймворка необходимо добавить приложение `django_sy_framework.base` в `INSTALLED_APPS`
 
 ### Блоки общего шаблона
 
