@@ -17,7 +17,6 @@ from django_sy_framework.custom_auth.models import ExternGoogleUser, Token, get_
 from django_sy_framework.custom_auth.serializers import (
     AddTokenSerializer,
     EditTokenSerializer,
-    ExternRegistrationViewSerializer,
     RegistrationSerializer,
 )
 
@@ -84,7 +83,7 @@ class ExternAuthGoogleView(APIView):
                     ),
                 
             }
-            return render(request, 'pages/message.html', context)
+            return render(request, 'base/message.html', context)
 
         # Авторизуемся через Google, получив в ответ данные пользователя
         params = {
@@ -97,16 +96,16 @@ class ExternAuthGoogleView(APIView):
         user_info = response.json()
         if not user_info['verified_email']:
             context = {'success': False, 'title': 'Ошибка авторизации через Google', 'message': 'E-mail в учётной записи Google не подтверждён. Пожалуйста, подтвердите e-mail и попробуйте авторизоваться вновь.'}
-            return render(request, 'pages/message.html', context)
+            return render(request, 'base/message.html', context)
 
         user_hashed_id = get_hash(user_info['id'])
-        temp_username = get_hash('{}{}'.format(user_info['email'], user_info['id']))
+        temp_username = user_info['email'].split('@')[0]
         ext_user_set = ExternGoogleUser.objects.filter(extern_id=user_hashed_id)
         if not ext_user_set.count():
             # Регистрируем пользователя
             user = User(username=temp_username, email=user_info['email'], first_name=user_info['given_name'], last_name=user_info['family_name'])
             user.save()
-            ext_user = ExternGoogleUser(user=user, extern_id=user_hashed_id, is_username_changed=False)
+            ext_user = ExternGoogleUser(user=user, extern_id=user_hashed_id)
             ext_user.save()
         else:
             ext_user = ext_user_set.get()
@@ -116,41 +115,8 @@ class ExternAuthGoogleView(APIView):
                 user.save()
 
         login(request, ext_user.user)
-        if not ext_user.is_username_changed:
-            return Response(status=status.HTTP_307_TEMPORARY_REDIRECT, headers={'location': reverse('extern_registration')})
-
-        # Авторизуем пользователя
         context = {'success': True, 'title': 'Успешная авторизация через Google', 'message': 'Вы успешно авторизовались на сайте через Google. Теперь Вам доступны все возможности сервера'}
-        return render(request, 'pages/message.html', context)
-
-
-class ExternRegistrationView(APIView):
-    def post(self, request):
-        serializer = ExternRegistrationViewSerializer(data=request.POST)
-        if not serializer.is_valid(raise_exception=False):
-            context = {'errors': serializer.errors}
-            return render(request, 'pages/change_username_after_first_extern_auth.html', context=context)
-
-        data = serializer.validated_data
-        if data['username'] != request.user.username:
-            user = User.objects.filter(username=data['username'])
-            if user.count():
-                context = {'errors': {'username': ['Такой пользователь уже существует. Пожалуйста, напишите другое имя пользователя']}}
-                return render(request, 'pages/change_username_after_first_extern_auth.html', context=context)
-
-        request.user.username = data['username']
-        request.user.first_name = data['first_name']
-        request.user.last_name = data.get('last_name')
-        request.user.save()
-        ext_user = ExternGoogleUser.objects.filter(user=request.user).get()
-        ext_user.is_username_changed = True
-        ext_user.save()
-        context = {'success': True, 'title': 'Успешная авторизация через Google', 'message': 'Вы успешно авторизовались на сайте через Google. Теперь Вам доступны все возможности сервера'}
-        return render(request, 'pages/message.html', context=context)
-
-    def get(self, request):
-        context = {'error': ''}
-        return render(request, 'pages/change_username_after_first_extern_auth.html', context=context)
+        return render(request, 'base/message.html', context)
 
 
 class TokenView(LoginRequiredMixin, View):
