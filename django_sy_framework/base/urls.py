@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (
+from django_sy_framework.base.views import (
     IntroView,
     MicroservicesListView,
     ProfileView,

@@ -2,10 +2,9 @@ import requests
 from secrets import token_urlsafe
 
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.shortcuts import render
 from django.views import View
 from django.urls import reverse
@@ -13,12 +12,25 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-from django_sy_framework.custom_auth.models import ExternGoogleUser, Token, get_hash
+from django_sy_framework.custom_auth.models import Token, get_hash
 from django_sy_framework.custom_auth.serializers import (
     AddTokenSerializer,
     EditTokenSerializer,
     RegistrationSerializer,
 )
+from django_sy_framework.custom_auth.backend import create_or_update_user
+from django_sy_framework.custom_auth.utils import microservice_auth_api
+
+
+def create_user(**user_data):
+    user_model = get_user_model()
+    user = user_model(
+        microservice_auth_id=user_data['microservice_auth_id'],
+        username=user_data['username'],
+        first_name=user_data['first_name'],
+        last_name=user_data['last_name'],
+    )
+    user.save()
 
 
 class LoginView(APIView):
@@ -32,8 +44,6 @@ class LoginView(APIView):
         if user:
             login(request, user)
             data['success'] = True
-        else:
-            pass
 
         return Response(status=status.HTTP_200_OK, data=data)
 
@@ -43,21 +53,29 @@ class LogoutView(APIView):
         logout(request)
         return Response(status=status.HTTP_307_TEMPORARY_REDIRECT, headers={'location': reverse('index')})
 
+
 class RegistrationView(APIView):
     def post(self, request):
         serializer = RegistrationSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        user_creation_form = UserCreationForm(data)
-        data_for_response = {}
-        if user_creation_form.is_valid():
-            user_creation_form.save()
-            data_for_response['success'] = True
-        else:
-            data_for_response['success'] = False
-            data_for_response['errors'] = user_creation_form.errors
+        user_data = microservice_auth_api.registrate(
+            username=data['username'],
+            password=data['password1'],
+            email=data['email'],
+            first_name='',
+            last_name='',
+        )
+        if not user_data:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'success': False, 'errors': {}})
 
-        return Response(status=status.HTTP_200_OK, data=data_for_response)
+        create_user(
+            microservice_auth_id=user_data['microservice_auth_id'],
+            username=data['username'],
+            first_name='',
+            last_name='',
+        )
+        return Response(status=status.HTTP_200_OK, data={'success': True})
 
 
 class ExternAuthGoogleView(APIView):
@@ -98,23 +116,25 @@ class ExternAuthGoogleView(APIView):
             context = {'success': False, 'title': 'Ошибка авторизации через Google', 'message': 'E-mail в учётной записи Google не подтверждён. Пожалуйста, подтвердите e-mail и попробуйте авторизоваться вновь.'}
             return render(request, 'base/message.html', context)
 
-        user_hashed_id = get_hash(user_info['id'])
-        temp_username = user_info['email'].split('@')[0]
-        ext_user_set = ExternGoogleUser.objects.filter(extern_id=user_hashed_id)
-        if not ext_user_set.count():
-            # Регистрируем пользователя
-            user = User(username=temp_username, email=user_info['email'], first_name=user_info['given_name'], last_name=user_info['family_name'])
-            user.save()
-            ext_user = ExternGoogleUser(user=user, extern_id=user_hashed_id)
-            ext_user.save()
-        else:
-            ext_user = ext_user_set.get()
-            user = ext_user.user
-            if user.email != user_info['email']:
-                user.email = user_info['email']
-                user.save()
+        # создаём глобального и локального пользователя на Платформе
 
-        login(request, ext_user.user)
+        user_data = microservice_auth_api.login_or_registrate_by_extern_service(
+            username='{}-{}'.format(user_info['email'].split('@')[0], user_info['id'][-10:]),
+            email=user_info['email'],
+            first_name=user_info['given_name'],
+            last_name=user_info['family_name'],
+            extern_id=get_hash('google-{}'.format(user_info['id'])),
+        )
+        if not user_data:
+            context = {
+                'success': True,
+                'title': 'Ошибка авторизации через Google',
+                'message': 'Не удалось авторизоваться через Google',
+            }
+            return render(request, 'base/message.html', context)
+
+        user = create_or_update_user(**user_data)
+        login(request, user)
         context = {'success': True, 'title': 'Успешная авторизация через Google', 'message': 'Вы успешно авторизовались на сайте через Google. Теперь Вам доступны все возможности сервера'}
         return render(request, 'base/message.html', context)
 
@@ -123,7 +143,7 @@ class TokenView(LoginRequiredMixin, View):
     def get(self, request):
         tokens = Token.objects.filter(user=request.user).values('id', 'app_name')
         context = {'tokens': list(tokens)}
-        return render(request, 'pages/tokens.html', context=context)
+        return render(request, 'custom_auth/tokens.html', context=context)
 
 
 class AddTokenView(LoginRequiredMixin, APIView):

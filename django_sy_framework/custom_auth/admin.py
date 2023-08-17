@@ -1,10 +1,7 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
-from django_sy_framework.custom_auth.models import ExternGoogleUser
-
-
-class ExternGoogleUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'extern_id', 'is_username_changed')
+from django_sy_framework.custom_auth.models import CustomAuthUser
 
 
-admin.site.register(ExternGoogleUser, ExternGoogleUserAdmin)
+admin.site.register(CustomAuthUser, UserAdmin)
