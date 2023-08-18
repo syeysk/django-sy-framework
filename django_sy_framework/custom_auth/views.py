@@ -3,7 +3,6 @@ from secrets import token_urlsafe
 
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.shortcuts import render
 from django.views import View
