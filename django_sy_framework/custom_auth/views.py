@@ -30,6 +30,7 @@ def create_user(**user_data):
         last_name=user_data['last_name'],
     )
     user.save()
+    return user
 
 
 class LoginView(APIView):
@@ -68,12 +69,13 @@ class RegistrationView(APIView):
         if not user_data:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'success': False, 'errors': {}})
 
-        create_user(
+        user = create_user(
             microservice_auth_id=user_data['microservice_auth_id'],
             username=data['username'],
             first_name='',
             last_name='',
         )
+        login(request, user)
         return Response(status=status.HTTP_200_OK, data={'success': True})
 
 
