@@ -128,7 +128,7 @@ class ExternAuthGoogleView(APIView):
         )
         if not user_data:
             context = {
-                'success': True,
+                'success': False,
                 'title': 'Ошибка авторизации через Google',
                 'message': 'Не удалось авторизоваться через Google',
             }
