@@ -67,9 +67,9 @@ class RegistrationView(APIView):
             last_name='',
         )
         if not user_data:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'success': False, 'errors': {}})
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={})
         elif 'microservice_auth_id' not in user_data:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'success': False, 'errors': user_data})
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=user_data)
 
         user = create_user(
             microservice_auth_id=user_data['microservice_auth_id'],
