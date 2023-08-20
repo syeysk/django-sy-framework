@@ -10,7 +10,7 @@ def get_hash(token: str):
     return blake2b(
         token.encode('utf-8'),
         digest_size=64,
-        salt=settings.API_TOKEN_SALT.encode('utf-8'),
+        salt=settings.SALT.encode('utf-8'),
     ).hexdigest()
 
 
