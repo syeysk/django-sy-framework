@@ -70,7 +70,10 @@ def login(username: str, password: str) -> dict[str, Any] | None:
 
 
 def registrate(username: str, password: str, email: str, first_name: str, last_name: str) -> dict[str, Any] | None:
-    """Выполняет регистрацию пользователя. В случае успеха возвращает словарь с данными пользователя"""
+    """
+    Выполняет регистрацию пользователя. В случае успеха возвращает словарь с данными пользователя,
+    иначе - словарь с ошибками (подобно сериализатору) либо None
+    """
     data = {
         'username': username, 'password': password, 'email': email, 'first_name': first_name, 'last_name': last_name,
     }
@@ -80,6 +83,8 @@ def registrate(username: str, password: str, email: str, first_name: str, last_n
         responsed_data = decrypt_json(response.json())
         if responsed_data['success']:
             return {'microservice_auth_id': responsed_data['microservice_auth_id']}
+    elif response.status_code == 400:
+        return decrypt_json(response.json())
 
 
 def login_or_registrate_by_extern_service(
