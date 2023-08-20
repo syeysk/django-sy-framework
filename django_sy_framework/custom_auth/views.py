@@ -119,8 +119,9 @@ class ExternAuthGoogleView(APIView):
 
         # создаём глобального и локального пользователя на Платформе
 
+        username = '{}-{}'.format(user_info['email'].split('@')[0], user_info['id'][-10:])
         user_data = microservice_auth_api.login_or_registrate_by_extern_service(
-            username='{}-{}'.format(user_info['email'].split('@')[0], user_info['id'][-10:]),
+            username=username,
             email=user_info['email'],
             first_name=user_info['given_name'],
             last_name=user_info['family_name'],
@@ -134,7 +135,7 @@ class ExternAuthGoogleView(APIView):
             }
             return render(request, 'base/message.html', context)
 
-        user = create_or_update_user(**user_data)
+        user = create_or_update_user(username=username, **user_data)
         login(request, user)
         context = {'success': True, 'title': 'Успешная авторизация через Google', 'message': 'Вы успешно авторизовались на сайте через Google. Теперь Вам доступны все возможности сервера'}
         return render(request, 'base/message.html', context)
