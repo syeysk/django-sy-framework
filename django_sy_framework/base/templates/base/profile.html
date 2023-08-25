@@ -8,7 +8,7 @@
     <form>
         <div id="username-group" class="mb-3 form-group">
             <div class="form-floating">
-                <input class="form-control" placeholder="имя пользователя" id="field_username" name="username" disabled value="{{ request.user.username }}">
+                <input class="form-control" placeholder="имя пользователя" id="field_username" name="username" value="{{ request.user.username }}">
                 <label for="field_username">Пользователь</label>
             </div>
         </div>
@@ -44,11 +44,7 @@
                 dataType: 'json',
                 data: $(form).serialize(),
                 success: function(result) {
-                    if (result.success) {
-                        set_valid_field(form, result.updated);
-                    } else {
-                        set_invalid_field(form, result.errors);
-                   }
+                    set_valid_field(form, result.updated);
                 },
                 error: function(jqxhr, a, b) {
                     console.log(jqxhr.responseText);

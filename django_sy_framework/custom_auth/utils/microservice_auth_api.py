@@ -134,12 +134,25 @@ def delete(username: str, password: str) -> dict:
     return {}
 
 
-def edit(username: str, user_data: dict) -> dict:
+def edit(
+    current_username: str,
+    username: str,
+    last_name: str,
+    first_name: str,
+) -> dict:
     """Выполняет изменение данных пользователя. В случае успеха возвращает пустой словарь"""
-    data = {}
+    data = {
+        'current_username': current_username,
+        'username': username,
+        'last_name': last_name,
+        'first_name': first_name,
+    }
     api = FullAPI('1')
     response = api.auth.user.put('/', json=encrypt_json(data))
-    return {}
+    if response.status_code == 200:
+        responsed_data = decrypt_json(response.json())
+        if responsed_data['success']:
+            return responsed_data['updated_fields']
 
 
 def get(username: str) -> dict:

@@ -32,19 +32,21 @@ class ProfileView(LoginRequiredMixin, APIView):
         data = serializer.validated_data
 
         user = request.user
-        update_fields = []
-        if user.first_name != data['first_name']:
+        updated_fields = microservice_auth_api.edit(current_username=user.username, **data)
+
+        if 'first_name' in updated_fields:
             user.first_name = data['first_name']
-            update_fields.append('first_name')
 
-        if user.last_name != data['last_name']:
+        if 'last_name' in updated_fields:
             user.last_name = data['last_name']
-            update_fields.append('last_name')
 
-        if update_fields:
+        if 'username' in updated_fields:
+            user.username = data['username']
+
+        if updated_fields:
             user.save()
 
-        result_data = {'success': True, 'updated': update_fields}
+        result_data = {'updated': updated_fields}
         return Response(status=status.HTTP_200_OK, data=result_data)
 
 
