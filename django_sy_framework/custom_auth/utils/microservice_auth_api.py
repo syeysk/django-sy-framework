@@ -65,6 +65,7 @@ def login(username: str, password: str) -> dict[str, Any] | None:
                 'last_name': responsed_data['last_name'],
                 'first_name': responsed_data['first_name'],
                 'is_staff': responsed_data['is_staff'],
+                'is_active': responsed_data['is_active'],
                 'is_superuser': responsed_data['is_superuser'],
             }
 
@@ -116,6 +117,7 @@ def login_or_registrate_by_extern_service(
                 'last_name': responsed_data['last_name'],
                 'first_name': responsed_data['first_name'],
                 'is_staff': responsed_data['is_staff'],
+                'is_active': responsed_data['is_active'],
                 'is_superuser': responsed_data['is_superuser'],
             }
 
@@ -140,9 +142,19 @@ def edit(username: str, user_data: dict) -> dict:
     return {}
 
 
-def get(username: str, user_data: dict) -> dict:
+def get(username: str) -> dict:
     """Выполняет получение данных пользователя."""
-    data = {}
+    data = {'username': username}
     api = FullAPI('1')
     response = api.auth.user.get('/', json=encrypt_json(data))
-    return {}
+    if response.status_code == 200:
+        responsed_data = decrypt_json(response.json())
+        if responsed_data['success']:
+            return {
+                'last_name': responsed_data['last_name'],
+                'first_name': responsed_data['first_name'],
+                'is_staff': responsed_data['is_staff'],
+                'is_active': responsed_data['is_active'],
+                'is_superuser': responsed_data['is_superuser'],
+                'email': responsed_data['email'],
+            }

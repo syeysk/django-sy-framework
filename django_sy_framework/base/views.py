@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from django_sy_framework.base.serializers import ProfileViewSerializer
+from django_sy_framework.custom_auth.utils import microservice_auth_api
 
 
 class IntroView(APIView):
@@ -21,7 +22,8 @@ class MicroservicesListView(APIView):
 
 class ProfileView(LoginRequiredMixin, APIView):
     def get(self, request):
-        context = {}
+        user_data = microservice_auth_api.get(username=request.user.username)
+        context = {'user_data': user_data}
         return render(request, 'base/profile.html', context)
 
     def post(self, request):

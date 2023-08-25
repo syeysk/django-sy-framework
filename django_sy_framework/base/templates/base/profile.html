@@ -14,19 +14,19 @@
         </div>
         <div id="email-group" class="mb-3 form-group">
             <div class="form-floating">
-                <input class="form-control" placeholder="e-mail" id="field_email" name="email" disabled value="{{ request.user.email }}">
+                <input class="form-control" placeholder="e-mail" id="field_email" name="email" disabled value="{{ user_data.email }}">
                 <label for="field_email">E-mail</label>
             </div>
         </div>
         <div id="first_name-group" class="mb-3 form-group">
             <div class="form-floating">
-                <input class="form-control" placeholder="имя" id="field_first_name" name="first_name" value="{{ request.user.first_name }}">
+                <input class="form-control" placeholder="имя" id="field_first_name" name="first_name" value="{{ user_data.first_name }}">
                 <label for="field_first_name">Имя</label>
             </div>
         </div>
         <div id="last_name-group" class="mb-3 form-group">
             <div class="form-floating">
-                <input class="form-control" placeholder="фамилия" id="field_last_name" name="last_name" value="{{ request.user.last_name }}">
+                <input class="form-control" placeholder="фамилия" id="field_last_name" name="last_name" value="{{ user_data.last_name }}">
                 <label for="field_last_name">Фамилия</label>
             </div>
         </div>
