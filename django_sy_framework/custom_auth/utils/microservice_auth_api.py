@@ -89,7 +89,7 @@ def registrate(username: str, password: str, email: str, first_name: str, last_n
 
 
 def login_or_registrate_by_extern_service(
-    username: str,
+    username_for_new_user: str,
     email: str,
     first_name: str,
     last_name: str,
@@ -101,7 +101,7 @@ def login_or_registrate_by_extern_service(
     В случае успеха возвращает словарь с данными пользователя
     """
     data = {
-        'username': username,
+        'username': username_for_new_user,
         'email': email,
         'first_name': first_name,
         'last_name': last_name,
@@ -114,6 +114,7 @@ def login_or_registrate_by_extern_service(
         if responsed_data['success']:
             return {
                 'microservice_auth_id': responsed_data['microservice_auth_id'],
+                'username': responsed_data['username'],
                 'last_name': responsed_data['last_name'],
                 'first_name': responsed_data['first_name'],
                 'is_staff': responsed_data['is_staff'],

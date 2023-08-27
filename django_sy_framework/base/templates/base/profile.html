@@ -51,7 +51,7 @@
                 },
                 statusCode: {
                     403: function(xhr) {
-                        alert(xhr.responseJSON.detail);
+                        console.log(xhr.responseJSON.detail);
                     },
                     400: function(xhr) {
                         set_invalid_field(form, xhr.responseJSON);
