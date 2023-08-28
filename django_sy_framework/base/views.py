@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from django_sy_framework.base.serializers import ProfileViewSerializer
-from django_sy_framework.custom_auth.utils import microservice_auth_api
+from django_sy_framework.utils import microservice_auth_api
 
 
 class IntroView(APIView):

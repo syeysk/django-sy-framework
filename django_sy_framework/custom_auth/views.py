@@ -18,7 +18,7 @@ from django_sy_framework.custom_auth.serializers import (
     RegistrationSerializer,
 )
 from django_sy_framework.custom_auth.backend import create_or_update_user
-from django_sy_framework.custom_auth.utils import microservice_auth_api
+from django_sy_framework.utils import microservice_auth_api
 
 
 def create_user(**user_data):

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
 
-from django_sy_framework.custom_auth.utils import microservice_auth_api
+from django_sy_framework.utils import microservice_auth_api
 
 
 def create_or_update_user(**user_data) -> 'django_sy_framework.custom_auth.CustomAuthUser':
