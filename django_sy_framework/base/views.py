@@ -22,7 +22,7 @@ class MicroservicesListView(APIView):
 
 class ProfileView(LoginRequiredMixin, APIView):
     def get(self, request):
-        user_data = microservice_auth_api.get(username=request.user.username)
+        user_data = microservice_auth_api.get(microservice_auth_id=request.microservice_auth_id)
         context = {'user_data': user_data}
         return render(request, 'base/profile.html', context)
 
@@ -32,7 +32,7 @@ class ProfileView(LoginRequiredMixin, APIView):
         data = serializer.validated_data
 
         user = request.user
-        updated_fields = microservice_auth_api.edit(current_username=user.username, **data)
+        updated_fields = microservice_auth_api.edit(microservice_auth_id=user.microservice_auth_id, **data)
 
         if 'first_name' in updated_fields:
             user.first_name = data['first_name']

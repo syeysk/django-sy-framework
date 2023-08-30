@@ -84,27 +84,27 @@ def login_or_registrate_by_extern_service(
             }
 
 
-def delete(username: str, password: str) -> dict:
+def delete(microservice_auth_id: str, password: str) -> dict:
     """
     Выполняет удаление пользователя.
     :param username: имя пользователя
     :param password: пароль пользователя
     :return: в случае успеха возвращает пустой словарь, иначе - данные с ошибками в формате, как у сериалиазатора"""
-    data = {}
+    data = {'microservice_auth_id': microservice_auth_id}
     api = API('1')
     response = api.auth.user.delete('/', json=encrypt_json(data))
     return {}
 
 
 def edit(
-    current_username: str,
+    microservice_auth_id: str,
     username: str,
     last_name: str,
     first_name: str,
 ) -> dict:
     """Выполняет изменение данных пользователя. В случае успеха возвращает пустой словарь"""
     data = {
-        'current_username': current_username,
+        'microservice_auth_id': microservice_auth_id,
         'username': username,
         'last_name': last_name,
         'first_name': first_name,
@@ -117,15 +117,16 @@ def edit(
             return response_data['updated_fields']
 
 
-def get(username: str) -> dict:
+def get(microservice_auth_id: str) -> dict:
     """Выполняет получение данных пользователя."""
-    data = {'username': username}
+    data = {'microservice_auth_id': microservice_auth_id}
     api = API('1')
     response = api.auth.user.get('/', json=encrypt_json(data))
     if response.status_code == 200:
         response_data = decrypt_json(response.json())
         if response_data['success']:
             return {
+                'username': response_data['username'],
                 'last_name': response_data['last_name'],
                 'first_name': response_data['first_name'],
                 'is_staff': response_data['is_staff'],
