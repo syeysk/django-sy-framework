@@ -15,7 +15,7 @@ def decrypt_json(json_data):
 
 def login(username: str, password: str) -> dict[str, Any] | None:
     """Выполняет авторизацию пользователя. В случае успеха возвращает словарь с данными пользователя"""
-    api = API('1')
+    api = API('1', 'auth')
     data = {'username': username, 'password': password}
     response = api.auth.login.post('/', json=encrypt_json(data))
     if response.status_code == 200:
@@ -39,7 +39,7 @@ def registrate(username: str, password: str, email: str, first_name: str, last_n
     data = {
         'username': username, 'password': password, 'email': email, 'first_name': first_name, 'last_name': last_name,
     }
-    api = API('1')
+    api = API('1', 'auth')
     response = api.auth.registrate.post('/', json=encrypt_json(data))
     if response.status_code == 200:
         response_data = decrypt_json(response.json())
@@ -68,7 +68,7 @@ def login_or_registrate_by_extern_service(
         'last_name': last_name,
         'extern_id': extern_id,
     }
-    api = API('1')
+    api = API('1', 'auth')
     response = api.auth.login_or_registrate_by_extern.post('/', json=encrypt_json(data))
     if response.status_code == 200:
         response_data = decrypt_json(response.json())
@@ -84,32 +84,32 @@ def login_or_registrate_by_extern_service(
             }
 
 
-def delete(microservice_auth_id: str, password: str) -> dict:
+def delete(microservice_auth_id: 'uuid.UUID', password: str) -> dict:
     """
     Выполняет удаление пользователя.
     :param username: имя пользователя
     :param password: пароль пользователя
     :return: в случае успеха возвращает пустой словарь, иначе - данные с ошибками в формате, как у сериалиазатора"""
-    data = {'microservice_auth_id': microservice_auth_id}
-    api = API('1')
+    data = {'microservice_auth_id': str(microservice_auth_id)}
+    api = API('1', 'auth')
     response = api.auth.user.delete('/', json=encrypt_json(data))
     return {}
 
 
 def edit(
-    microservice_auth_id: str,
+    microservice_auth_id: 'uuid.UUID',
     username: str,
     last_name: str,
     first_name: str,
 ) -> dict:
     """Выполняет изменение данных пользователя. В случае успеха возвращает пустой словарь"""
     data = {
-        'microservice_auth_id': microservice_auth_id,
+        'microservice_auth_id': str(microservice_auth_id),
         'username': username,
         'last_name': last_name,
         'first_name': first_name,
     }
-    api = API('1')
+    api = API('1', 'auth')
     response = api.auth.user.put('/', json=encrypt_json(data))
     if response.status_code == 200:
         response_data = decrypt_json(response.json())
@@ -117,10 +117,10 @@ def edit(
             return response_data['updated_fields']
 
 
-def get(microservice_auth_id: str) -> dict:
+def get(microservice_auth_id: 'uuid.UUID') -> dict:
     """Выполняет получение данных пользователя."""
-    data = {'microservice_auth_id': microservice_auth_id}
-    api = API('1')
+    data = {'microservice_auth_id': str(microservice_auth_id)}
+    api = API('1', 'auth')
     response = api.auth.user.get('/', json=encrypt_json(data))
     if response.status_code == 200:
         response_data = decrypt_json(response.json())

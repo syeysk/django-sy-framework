@@ -22,7 +22,7 @@ class MicroservicesListView(APIView):
 
 class ProfileView(LoginRequiredMixin, APIView):
     def get(self, request):
-        user_data = microservice_auth_api.get(microservice_auth_id=request.microservice_auth_id)
+        user_data = microservice_auth_api.get(microservice_auth_id=request.user.microservice_auth_id)
         context = {'user_data': user_data}
         return render(request, 'base/profile.html', context)
 
