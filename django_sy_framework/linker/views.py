@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.core.paginator import Paginator
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -29,10 +31,9 @@ class LinkerView(APIView):
 
         fields = [f'{related_name}__{field}' for field in data['fields']]
         linked_objects = []
-        for linked_object in page.object_list.values('content_type', 'object_id', *fields):
+        for linker in page.object_list.only(*fields):
             linked_object = {
-                key.split(f'{related_name}__', 1)[1]: value
-                for key, value in linked_object.items() if len(key.split(f'{related_name}__', 1)) == 2
+                field: getattr(linker.content_object, field) for field in chain(data['fields'], data['extra_fields'])
             }
             linked_objects.append(linked_object)
 

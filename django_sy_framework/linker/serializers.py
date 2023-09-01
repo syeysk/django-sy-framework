@@ -33,6 +33,16 @@ class LinkerGetViewSerializer(serializers.Serializer):
         allow_null=False,
         default=list(['-pk']),
     )
+    extra_fields = serializers.ListSerializer(
+        help_text='Возвращаемые поля (на уровне Питона, а не базы)',
+        child=serializers.CharField(
+            help_text='Имя возвращаемого поля',
+            min_length=1,
+            max_length=50,
+        ),
+        allow_null=False,
+        default=list(),
+    )
 
 
 class LinkerPutViewSerializer(serializers.Serializer):
