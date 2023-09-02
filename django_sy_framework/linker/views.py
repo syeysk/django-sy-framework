@@ -8,9 +8,14 @@ from rest_framework import status
 from django_sy_framework.linker.models import Linker
 from django_sy_framework.linker.serializers import LinkerGetViewSerializer, LinkerPutViewSerializer
 from django_sy_framework.linker.utils import link_instances
+from django_sy_framework.utils.authentication import AnonymousTokenAuthentication
+from django_sy_framework.utils.permissions import IsRequestFromMicroservice
 
 
 class LinkerView(APIView):
+    authentication_classes = [AnonymousTokenAuthentication]
+    permission_classes = [IsRequestFromMicroservice]
+
     def post(self, request, link_to: str, link_to_id: int):
         serializer = LinkerGetViewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
