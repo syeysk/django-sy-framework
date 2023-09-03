@@ -7,7 +7,7 @@ def link_instances(link_to: str, link_to_id: int, instances: list['django.db.mod
 
 
 def link_instance_from_request(instance, request):
-    link_to_parametr = request.GET.get('link_to')
+    link_to_parametr = request if isinstance(request, str) else request.GET.get('link_to')
     if link_to_parametr:
         link_to_parts = link_to_parametr.split('-')
         if len(link_to_parts) == 2:
