@@ -31,7 +31,15 @@ class LinkerView(APIView):
             )
         )
 
-        objects = queryset.order_by(*data['order_by'])
+        order_by = [
+            '{}{}__{}'.format(
+                '-' if field.startswith('-') else '',
+                related_name,
+                field[1:] if field.startswith('-') else field,
+            )
+            for field in data['order_by']
+        ]
+        objects = queryset.order_by(*order_by)
         paginator = Paginator(objects, data['on_page'])
         page = paginator.page(data['p'])
 
