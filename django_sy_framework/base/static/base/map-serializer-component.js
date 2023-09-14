@@ -17,10 +17,10 @@ MapSerializerComponent = {
     components: {MapFieldComponent},
     template: `
         <map-field-component
-            v-for="field in serializerMap"
-            :key="field.name"
-            :name="field.name"
-            :map="field.map"
+            v-for="(field_map, field_name) in serializerMap"
+            :key="field_name"
+            :name="field_name"
+            :map="field_map"
             v-model="value"
         ></map-field-component>
         <input type="hidden" v-model="value" v-bind="$attrs">
