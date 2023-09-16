@@ -1,6 +1,7 @@
 from itertools import chain
 
 from django.core.paginator import Paginator
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -16,6 +17,15 @@ class LinkerView(APIView):
     authentication_classes = [AnonymousTokenAuthentication]
     permission_classes = [IsRequestFromMicroservice]
 
+    @extend_schema(
+        tags=['Привязка объектов'],
+        parameters=[
+            LinkerGetViewSerializer,
+        ],
+        responses={},
+        description='Получает привязанные объекты',
+        summary='Получить привязанные объекты',
+    )
     def post(self, request, link_to: str, link_to_id: int):
         serializer = LinkerGetViewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -60,6 +70,15 @@ class LinkerView(APIView):
         }
         return Response(status=status.HTTP_200_OK, data=response_data)
 
+    @extend_schema(
+        tags=['Привязка объектов'],
+        parameters=[
+            LinkerPutViewSerializer,
+        ],
+        responses={202: None},
+        description='Привязывает несколько объектов к другому (например, несколько заметок к проекту)',
+        summary='Привязать объекты',
+    )
     def put(self, request, link_to: str, link_to_id: int):
         serializer = LinkerPutViewSerializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
@@ -72,6 +91,3 @@ class LinkerView(APIView):
             link_instances(link_to, link_to_id, chain(*querysets))
 
         return Response(status=status.HTTP_202_ACCEPTED)
-
-    def delete(self, request, link_to: str, link_to_id: str):
-        ...
