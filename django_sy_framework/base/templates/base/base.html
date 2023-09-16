@@ -173,12 +173,13 @@
                 </div>
                 <div>
                     {% block source_code_link %}<a href="https://github.com/syeysk/django-sy-framework" target="_blank">GitHub</a>{% endblock %}
+                    | <a href="{% url 'swagger-ui' %}" target="_blank">API</a>
                 </div>
             </div>
          </div>
     </footer>
 
-    {% block end_of_body %}No content{% endblock %}
+    {% block end_of_body %}{% endblock %}
     <!--<script src="https://getbootstrap.com/docs/3.4/assets/js/ie10-viewport-bug-workaround.js"></script>-->
     <script src="{% static 'base/extern/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
     <script>
