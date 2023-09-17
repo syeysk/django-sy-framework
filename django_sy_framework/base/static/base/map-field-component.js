@@ -1,9 +1,9 @@
 MapFieldComponent = {
-    props: ['modelValue', 'name', 'map'],
+    props: ['modelValue', 'name', 'map', 'fieldNamePrefix'],
     emits: ['update:modelValue'],
     components: {CodeMirrorComponent},
     data() {
-        return {prefixed_name: 'cred-' + this.name};
+        return {prefixed_name: (this.fieldNamePrefix || 'cred-') + this.name};
     },
     computed: {
         value: {

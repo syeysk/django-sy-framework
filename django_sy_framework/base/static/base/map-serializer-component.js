@@ -1,5 +1,5 @@
 MapSerializerComponent = {
-    props: ['serializerMap', 'modelValue', 'useDefaultValue'],
+    props: ['serializerMap', 'modelValue', 'useDefaultValue', 'fieldNamePrefix'],
     emits: ['update:modelValue'],
     computed: {
         value: {
@@ -22,6 +22,7 @@ MapSerializerComponent = {
             :name="field_name"
             :map="field_map"
             v-model="value"
+            :field-name-prefix="fieldNamePrefix"
         ></map-field-component>
         <input type="hidden" v-model="value" v-bind="$attrs">
     `,
