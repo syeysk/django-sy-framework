@@ -125,7 +125,7 @@ class ExternAuthGoogleView(APIView):
             username_for_new_user='{}-{}'.format(user_info['email'].split('@')[0], user_info['id'][-10:]),
             email=user_info['email'],
             first_name=user_info['given_name'],
-            last_name=user_info['family_name'],
+            last_name=user_info['last_name'],
             extern_id='google-{}'.format(user_info['id']),
         )
         if not user_data:
