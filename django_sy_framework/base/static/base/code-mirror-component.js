@@ -1,6 +1,6 @@
 CodeMirrorComponent = {
     inheritAttrs: false,
-    props: ['modelValue', 'mode'],
+    props: ['modelValue', 'mode', 'on_code_mirror_ready'],
     emits: ['update:modelValue'],
     data() {
         return {
@@ -34,5 +34,8 @@ CodeMirrorComponent = {
             'change',
             function(doc) {self.value = doc.getValue();},
         );
+        if (this.on_code_mirror_ready) {
+            this.on_code_mirror_ready(this.noteCodeMirror);
+        }
     },
 }
