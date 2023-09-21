@@ -1,6 +1,6 @@
 from rest_framework import authentication
 
-from django_sy_framework.custom_auth.models import Token
+from django_sy_framework.custom_auth.models import Token, get_hash
 
 
 class TokenAuthentication(authentication.BaseAuthentication):
@@ -14,6 +14,6 @@ class TokenAuthentication(authentication.BaseAuthentication):
         if not token:
             return None
 
-        token_object = Token.objects.filter(token=token).first()
+        token_object = Token.objects.filter(token=get_hash(token)).first()
         if token_object:
             return token_object.user, token
