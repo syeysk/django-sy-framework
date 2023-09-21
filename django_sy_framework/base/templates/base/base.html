@@ -15,11 +15,8 @@
     <script src="{% static 'base/functions.js' %}?v=1"></script>
     <script src="{% static 'base/windows.js' %}"></script>
     <link rel="stylesheet" href="{% static 'base/windows.css' %}">
-    {% if debug %}
     <script src="{% static 'base/extern/vue.3.js' %}"></script>
-    {% else %}
-    <script src="{% static 'base/extern/vue.3.prod.js' %}"></script>
-    {% endif %}
+    <!--<script src="{% static 'base/extern/vue.3.prod.js' %}"></script>-->
     <script src="{% static 'base/components.js' %}"></script>
 
     <link rel="stylesheet" href="{% static 'base/sticky-footer.css' %}">
