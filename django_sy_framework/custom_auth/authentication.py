@@ -2,6 +2,7 @@ from rest_framework import authentication
 
 from django_sy_framework.custom_auth.models import Token
 
+
 class TokenAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         token = None
