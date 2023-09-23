@@ -124,8 +124,8 @@ class ExternAuthGoogleView(APIView):
         user_data = microservice_auth_api.login_or_registrate_by_extern_service(
             username_for_new_user='{}-{}'.format(user_info['email'].split('@')[0], user_info['id'][-10:]),
             email=user_info['email'],
-            first_name=user_info['given_name'],
-            last_name=user_info['last_name'],
+            first_name=user_info.get('given_name', ''),
+            last_name=user_info.get('family_name', ''),
             extern_id='google-{}'.format(user_info['id']),
         )
         if not user_data:
