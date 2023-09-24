@@ -20,13 +20,13 @@
 
         <h2>Решайте задачи максимально продуктивно</h2>
 
-        <a href="https://solveit.fun" target="_blank" class="microservice" title="фасилитация встреч и фиксация решений">
+        <a {% if request.user.is_authenticated %}href="https://solveit.fun/faci/"{% else %}href="https://solveit.fun/" target="_blank"{% endif %} class="microservice" title="фасилитация встреч и фиксация решений">
             <img src="https://solveit.fun/static/logo.svg">
             <br>
             <span>Холсты фасилитации</span>
         </a>
 
-        <a href="https://intera.space" target="_blank" class="microservice" title="ведение страничек проектов">
+        <a {% if request.user.is_authenticated %}href="https://intera.space/project/"{% else %}href="https://intera.space/" target="_blank"{% endif %} class="microservice" title="ведение страничек проектов">
             <img src="https://intera.space/static/logo.svg">
             <br>
             <span>Страницы проектов</span>
@@ -34,7 +34,7 @@
 
         <h2>Сохраняйте и связывайте фантастические идеи</h2>
 
-        <a href="https://cachebrain.fun" target="_blank" class="microservice" title="хранение знаний, мыслей, конспектов в форме заметок">
+        <a {% if request.user.is_authenticated %}href="https://cachebrain.fun/note/"{% else %}href="https://cachebrain.fun/" target="_blank"{% endif %} class="microservice" title="хранение знаний, мыслей, конспектов в форме заметок">
             <img src="https://cachebrain.fun/static/logo.svg">
             <br>
             <span>База знаний</span>
@@ -42,7 +42,7 @@
 
         <h2>Автоматизируйте взаимодействия людей и сервисов</h2>
 
-        <a href="https://bot.intera.space" target="_blank" class="microservice" title="подключение ботов социальных сетей">
+        <a {% if request.user.is_authenticated %}href="https://bot.intera.space/"{% else %}href="https://bot.intera.space/social/" target="_blank"{% endif %} class="microservice" title="подключение ботов социальных сетей">
             <img src="https://bot.intera.space/static/logo.svg">
             <br>
             <span>Боты</span>
