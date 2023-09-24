@@ -48,6 +48,13 @@
         #login_box .form-control, #registration_box .form-control {
             width: auto !important;
         }
+        .paginator {
+            text-align: center;
+        }
+        .paginator span, .paginator a {
+            padding: 5px;
+            text-decoration: none;
+        }
     </style>
     <div class="container">
         <ul class="nav nav-tabs">
@@ -156,7 +163,7 @@
         </ul>
     </div>
 
-    <div class="container">
+    <div class="container" style="padding-bottom: 1px;">
         <h1>{% block title %}No title{% endblock %}</h1>
         {% block content %}No content{% endblock %}
     </div>
