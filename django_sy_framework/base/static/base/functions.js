@@ -752,3 +752,7 @@ function set_invalid_field(form, errors) {
         );
     }
 }
+
+function open_login_form(event) {
+    $('#btn_toggle_login_box').click();
+}
