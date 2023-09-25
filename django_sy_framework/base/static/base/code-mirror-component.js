@@ -27,6 +27,7 @@ CodeMirrorComponent = {
                 mode: this.mode,
                 lineWrapping: true,
                 extraKeys: {"Enter": "newlineAndIndentContinueMarkdownList"},
+                lineSeparator: '\n',
             },
         );
         let self = this;
