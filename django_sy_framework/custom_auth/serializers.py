@@ -1,4 +1,4 @@
-from re import match
+from re import search
 from rest_framework import serializers
 
 
@@ -9,10 +9,14 @@ class RegistrationSerializer(serializers.Serializer):
 
     def validate_password1(self, value):
         for template in ('[0-9]', '[a-z]', '[A-Z]', '[_-]'):
-            if not match(template, value):
+            if not search(template, value):
                 raise serializers.ValidationError(self.PASSWORD_VALIDATION_ERROR)
 
         return value
+
+    def validate_password2(self, value):
+        return self.validate_password1(value)
+
 
     def validate_data(self, data):
         if data['password1'] != data['password2']:
