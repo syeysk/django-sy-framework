@@ -17,13 +17,11 @@ class RegistrationSerializer(serializers.Serializer):
     def validate_password2(self, value):
         return self.validate_password1(value)
 
-
     def validate_data(self, data):
         if data['password1'] != data['password2']:
             raise serializers.ValidationError('Пароли должны совпадать')
 
         return data
-
 
     password1 = serializers.CharField(min_length=10, max_length=50)
     password2 = serializers.CharField(min_length=10, max_length=50)

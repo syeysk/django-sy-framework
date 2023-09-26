@@ -200,13 +200,14 @@
             });
 
             $('#login_button').click(function(event) {
+                let form = event.target.form;
                 $.ajax({
                     url: "{% url 'custom_login' %}",
                     headers: {
                         "X-CSRFToken": "{{ csrf_token }}",
                     },
                     dataType: 'json',
-                    data: $(event.target.form).serialize(),
+                    data: $(form).serialize(),
                     success: function(result) {
                         if (result.success) {
                             invert_status_fields(form);
