@@ -1,0 +1,30 @@
+h2, h3, h4 {
+    margin-top: 18pt;
+}
+h1, h2, h3, h4 {
+    margin-bottom: 12pt;
+}
+h1, h2 {
+    text-align: center;
+}
+.submenu_box {
+    width: max-content;
+    position: absolute;
+    background: white;
+    z-index: 1000;
+    border: 2px solid lightgrey;
+    padding: 0 5px 5px 5px;
+    border-radius: 3px;
+    border-width: 0 2px 2px 2px;
+    display: none;
+}
+#login_box .form-control, #registration_box .form-control {
+    width: auto !important;
+}
+.paginator {
+    text-align: center;
+}
+.paginator span, .paginator a {
+    padding: 5px;
+    text-decoration: none;
+}

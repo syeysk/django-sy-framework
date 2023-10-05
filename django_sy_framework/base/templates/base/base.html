@@ -21,41 +21,17 @@
 
     <link rel="stylesheet" href="{% static 'base/sticky-footer.css' %}">
     <!--<script src="https://getbootstrap.com/docs/3.4/assets/js/ie-emulation-modes-warning.js"></script>-->
+    <link rel="stylesheet" href="{% static 'base/base.css' %}?v=1">
+    <script>
+        var CSRF_TOKEN = '{{ csrf_token }}';
+        {% if not request.user.is_authenticated %}
+        var URL_REGISTRATION = '{% url 'custom_registration' %}';
+        var URL_LOGIN = ' url 'custom_login' %}';
+        {% endif %}
+    </script>
 </head>
 
 <body>
-    <style>
-        h2, h3, h4 {
-            margin-top: 18pt;
-        }
-        h1, h2, h3, h4 {
-            margin-bottom: 12pt;
-        }
-        h1, h2 {
-            text-align: center;
-        }
-        .submenu_box {
-            width: max-content;
-            position: absolute;
-            background: white;
-            z-index: 1000;
-            border: 2px solid lightgrey;
-            padding: 0 5px 5px 5px;
-            border-radius: 3px;
-            border-width: 0 2px 2px 2px;
-            display: none;
-        }
-        #login_box .form-control, #registration_box .form-control {
-            width: auto !important;
-        }
-        .paginator {
-            text-align: center;
-        }
-        .paginator span, .paginator a {
-            padding: 5px;
-            text-decoration: none;
-        }
-    </style>
     <div class="container">
         <ul class="nav nav-tabs">
             {% url 'index' as url %}
@@ -64,10 +40,6 @@
                   <img src="{% static 'logo.svg' %}" title="Главная страница" alt="логотип микросервиса" style="height:30px;">
                 </a>
             </li>
-            {# {% url 'note_list' as url %} #}
-            {# <li class="nav-item"> #}
-            {#     <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Заметки</a> #}
-            {# </li> #}
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{% block menu_microservice_name %}Microservice menu{% endblock %}</a>
                 <ul class="dropdown-menu">
@@ -163,7 +135,7 @@
         </ul>
     </div>
 
-    <div class="container" style="padding-bottom: 1px;">
+    <div class="container" style="padding-bottom: 1px; text-align: justify;">
         <h1>{% block title %}No title{% endblock %}</h1>
         {% block content %}No content{% endblock %}
     </div>
@@ -186,66 +158,5 @@
     {% block end_of_body %}{% endblock %}
     <!--<script src="https://getbootstrap.com/docs/3.4/assets/js/ie10-viewport-bug-workaround.js"></script>-->
     <script src="{% static 'base/extern/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
-    <script>
-        {% if not request.user.is_authenticated %}
-            $('#btn_google_auth').click(function() {window.onfocus = function(){window.location.reload();}})
-
-            $('#btn_toggle_login_box').click(function(event) {
-                $('#login_box').toggle();
-                $('#registration_box').hide();
-            });
-            $('#btn_toggle_registration_box').click(function(event) {
-                $('#registration_box').toggle();
-                $('#login_box').hide();
-            });
-
-            $('#login_button').click(function(event) {
-                let form = event.target.form;
-                $.ajax({
-                    url: "{% url 'custom_login' %}",
-                    headers: {
-                        "X-CSRFToken": "{{ csrf_token }}",
-                    },
-                    dataType: 'json',
-                    data: $(form).serialize(),
-                    success: function(result) {
-                        if (result.success) {
-                            invert_status_fields(form);
-                            window.location = window.location;
-                        } else {
-                            $('#login_bad_message').text('Неправильный пароль или пользователь не существует');
-                            $('#login_bad_message').removeClass('d-none');
-                        }
-                    },
-                    error: function(jqxhr, a, b) {
-                        console.log('error');
-                        console.log(jqxhr.responseText);
-                    },
-                    method: "post"
-                });
-            });
-            $('#registrate_button').click(function(event) {
-                let form = event.target.form;
-                $.ajax({
-                    url: "{% url 'custom_registration' %}",
-                    headers: {
-                        "X-CSRFToken": "{{ csrf_token }}",
-                    },
-                    dataType: 'json',
-                    data: $(form).serialize(),
-                    success: function(result) {
-                        invert_status_fields(form);
-                        window.location = window.location;
-                    },
-                    statusCode: {
-                        400: function(xhr) {
-                            clear_status_fields(form);
-                            set_invalid_field(form, xhr.responseJSON);
-                        },
-                    },
-                    method: "post"
-                });
-            });
-        {% endif %}
-    </script>
+    {% if not request.user.is_authenticated %}<script src="{% static 'base/auth.js' %}"></script>{% endif %}
 </body>
