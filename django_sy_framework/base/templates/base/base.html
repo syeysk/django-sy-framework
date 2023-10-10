@@ -25,8 +25,8 @@
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
         {% if not request.user.is_authenticated %}
-        var URL_REGISTRATION = '{% url 'custom_registration' %}';
-        var URL_LOGIN = ' url 'custom_login' %}';
+            var URL_REGISTRATION = '{% url 'custom_registration' %}';
+            var URL_LOGIN = '{% url 'custom_login' %}';
         {% endif %}
     </script>
 </head>
@@ -145,7 +145,7 @@
         <div style="display:flex; height: 99%; flex-direction: column; justify-content: center;">
             <div class="container" style="height: fit-content; display: flex;justify-content: space-between;">
                 <div>
-                    &#8580; <a href="https://syeysk.ru" target="_blank">SYeysk</a>, 2023
+                    &copy;<!--&#8580;--> <a href="https://syeysk.ru" target="_blank">SYeysk</a>, 2023
                 </div>
                 <div>
                     {% block source_code_link %}<a href="https://github.com/syeysk/django-sy-framework" target="_blank">GitHub</a>{% endblock %}
