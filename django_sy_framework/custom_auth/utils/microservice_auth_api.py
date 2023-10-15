@@ -84,18 +84,6 @@ def login_or_registrate_by_extern_service(
             }
 
 
-def delete(microservice_auth_id: 'uuid.UUID', password: str) -> dict:
-    """
-    Выполняет удаление пользователя.
-    :param username: имя пользователя
-    :param password: пароль пользователя
-    :return: в случае успеха возвращает пустой словарь, иначе - данные с ошибками в формате, как у сериалиазатора"""
-    data = {'microservice_auth_id': str(microservice_auth_id)}
-    api = API('1', 'auth')
-    response = api.auth.user.delete('/', json=encrypt_json(data))
-    return {}
-
-
 def edit(
     microservice_auth_id: 'uuid.UUID',
     username: str,
@@ -134,3 +122,13 @@ def get(microservice_auth_id: 'uuid.UUID') -> dict:
                 'is_superuser': response_data['is_superuser'],
                 'email': response_data['email'],
             }
+
+
+def delete(microservice_auth_id: 'uuid.UUID', password: str) -> dict:
+    """Выполняет получение данных пользователя."""
+    data = {'microservice_auth_id': str(microservice_auth_id), 'password': password}
+    api = API('1', 'auth')
+    response = api.auth.user.delete('/', json=encrypt_json(data))
+    if response.status_code == 200:
+        response_data = decrypt_json(response.json())
+        return response_data['success']
