@@ -11,6 +11,7 @@
     <meta name="description" content="{% block description %}{% endblock %}" />
     <meta name="keywords" content="{% block keywords %}{% endblock %}" />
     <title>{% block site_title %}Framework{% endblock %} | {% block page_title %}No content{% endblock %}</title>
+    <link rel="canonical" href="{{ site_url }}{{ request.path }}">
     <script src="{% static 'base/extern/jquery-3.6.0.min.js' %}"></script>
     <link href="{% static 'base/extern/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
     <script src="{% static 'base/functions.js' %}?v=3"></script>
