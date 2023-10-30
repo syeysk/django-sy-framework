@@ -2,16 +2,16 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    {{ metric_system_code | safe }}
-    {% block start_of_head %}{% endblock %}
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="HandheldFriendly" content="true" />
-    <meta name="MobileOptimized" content="320" />
     <meta name="description" content="{% block description %}{% endblock %}" />
     <meta name="keywords" content="{% block keywords %}{% endblock %}" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
     <title>{% block site_title %}Framework{% endblock %} | {% block page_title %}No content{% endblock %}</title>
     <link rel="canonical" href="{{ site_url }}{{ request.path }}">
+    {% block start_of_head %}{% endblock %}
+    {{ metric_system_code | safe }}
     <script src="{% static 'base/extern/jquery-3.6.0.min.js' %}"></script>
     <link href="{% static 'base/extern/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
     <script src="{% static 'base/functions.js' %}?v=3"></script>
@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{% static 'base/base.css' %}?v=1">
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
+        var IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
         {% if not request.user.is_authenticated %}
             var URL_REGISTRATION = '{% url 'custom_registration' %}';
             var URL_LOGIN = '{% url 'custom_login' %}';
