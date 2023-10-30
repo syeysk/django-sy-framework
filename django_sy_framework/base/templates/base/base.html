@@ -30,6 +30,7 @@
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
         var IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
+        var STATIC_URL = '{% static '' %}'
         {% if not request.user.is_authenticated %}
             var URL_REGISTRATION = '{% url 'custom_registration' %}';
             var URL_LOGIN = '{% url 'custom_login' %}';
