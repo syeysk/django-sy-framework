@@ -14,7 +14,7 @@
     {{ metric_system_code | safe }}
     <script src="{% static 'base/extern/jquery-3.6.0.min.js' %}"></script>
     <link href="{% static 'base/extern/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
-    <script src="{% static 'base/functions.js' %}?v=3"></script>
+    <script src="{% static 'base/functions.js' %}?v=4"></script>
     <script src="{% static 'base/windows.js' %}"></script>
     <link rel="stylesheet" href="{% static 'base/windows.css' %}">
     {% if debug %}
@@ -26,15 +26,11 @@
 
     <link rel="stylesheet" href="{% static 'base/sticky-footer.css' %}">
     <!--<script src="https://getbootstrap.com/docs/3.4/assets/js/ie-emulation-modes-warning.js"></script>-->
-    <link rel="stylesheet" href="{% static 'base/base.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'base/base.css' %}?v=2">
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
         var IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
         var STATIC_URL = '{% static '' %}'
-        {% if not request.user.is_authenticated %}
-            var URL_REGISTRATION = '{% url 'custom_registration' %}';
-            var URL_LOGIN = '{% url 'custom_login' %}';
-        {% endif %}
     </script>
 </head>
 
@@ -55,89 +51,28 @@
             </li>
             {% url 'microservices' as url %}
             <li class="nav-item">
-                <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Экосистема</a>
+                <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow">Экосистема</a>
             </li>
             {# {% url 'service_server' as url %}#}
             {#<li class="nav-item">#}
             {#    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Обслуживание сервера</a>#}
             {#</li>#}
             {% if request.user.is_authenticated %}
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ request.user.username }}</a>
-                <ul class="dropdown-menu">
-                    {% url 'custom_profile' as url %}
-                    <li>
-                        <a href="{{ url }}" class="dropdown-item{% if request.path == url %} active{% endif %}">Профиль</a>
-                    </li>
-                    {% url 'custom_auth_tokens' as url %}
-                    <li>
-                        <a href="{{ url }}" class="dropdown-item{% if request.path == url %} active{% endif %}">Токены для API</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{% url 'custom_logout' %}">
-                            <input class="form-control" type="button" value="Выйти" id="logout_button"/>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                {% url 'custom_profile' as url %}
+                <li class="nav-item">
+                    <a href="{{ url }}" class="nav-link{% if request.path == url or request.resolver_match.url_name == 'custom_auth_tokens' %} active{% endif %}" style="padding:5px;">
+                        <img src="{% static 'base/profile_human.svg' %}" title="Профиль" alt="ссылка на профиль" style="height:30px;">
+                    </a>
+                </li>
             {% else %}
-            <li class="nav-item" style="position: relative">
-                <input type="button" value="{% if request.user.is_authenticated %}{{ request.user.username }}{% else %}Войти{% endif %}" class="nav-link" id="btn_toggle_login_box">
-                <div id="login_box" class="submenu_box">
-                    <form>
-                        <table>
-                            <tr>
-                              <td><label for="id_for_label_username__login">Пользователь</label></td>
-                              <td><input required class="form-control" type="text" name="username" id="id_for_label_username__login"></td>
-                            </tr>
-
-                            <tr>
-                              <td><label for="id_for_label_password">Пароль</label></td>
-                              <td><input required class="form-control" type="password" name="password" id="id_for_label_password"></td>
-                            </tr>
-                        </table>
-
-                        <input class="form-control d-inline-block" type="button" value="Войти" id="login_button"/>
-                        <a style="decoration: none;" href="{{ google_auth_url }}" target="_blank">
-                            <input class="form-control d-inline-block" type="button" value="Войти через Google" id="btn_google_auth"/>
-                        </a>
-                        <br>
-                        <div id="login_bad_message" class="alert alert-danger d-none" role="alert"></div>
-                    </form>
-                </div>
-            </li>
-            <li class="nav-item" style="position: relative">
-                <input type="button" value="Регистрация" class="nav-link" id="btn_toggle_registration_box">
-                <div id="registration_box" class="submenu_box">
-                    <form>
-                        <div class="mb-3 row" id="username-group">
-                            <label for="id_for_label_username__registr" class="col-sm-4 form-label">Пользователь:</label>
-                            <div class="col-sm-6">
-                                <input required class="form-control" type="text" name="username" id="id_for_label_username__registr">
-                            </div>
-                        </div>
-                        <div class="mb-3 row" id="email-group">
-                            <label for="id_for_label_email" class="col-sm-4 form-label">E-mail:</label>
-                            <div class="col-sm-6">
-                                <input required class="form-control" type="text" name="email" id="id_for_label_email">
-                            </div>
-                        </div>
-                        <div class="mb-3 row" id="password1-group">
-                            <label for="id_for_label_password1" class="col-sm-4 form-label">Пароль:</label>
-                            <div class="col-sm-6">
-                                <input required class="form-control" type="password" name="password1" id="id_for_label_password1">
-                            </div>
-                        </div>
-                        <div class="mb-3 row" id="password2-group">
-                            <label for="id_for_label_password2" class="col-sm-4 form-label">Повторите пароль:</label>
-                            <div class="col-sm-6">
-                                <input required class="form-control" type="password" name="password2" id="id_for_label_password2">
-                            </div>
-                        </div>
-                        <input class="form-control" type="button" value="Зарегистрироваться" id="registrate_button"/>
-                    </form>
-                </div>
-            </li>
+                {% url 'custom_login_page' as url %}
+                <li class="nav-item">
+                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow">Войти</a>
+                </li>
+                {% url 'custom_registration_page' as url %}
+                <li class="nav-item">
+                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow">Регистрация</a>
+                </li>
             {% endif %}
         </ul>
     </div>
@@ -165,5 +100,4 @@
     {% block end_of_body %}{% endblock %}
     <!--<script src="https://getbootstrap.com/docs/3.4/assets/js/ie10-viewport-bug-workaround.js"></script>-->
     <script src="{% static 'base/extern/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
-    {% if not request.user.is_authenticated %}<script src="{% static 'base/auth.js' %}?v=1"></script>{% endif %}
 </body>

@@ -1,0 +1,73 @@
+{% extends 'template.html' %}
+
+{% block title %}Авторизация{% endblock %}
+{% block page_title %}Авторизация{% endblock %}
+{% block start_of_head %}
+    {{ block.super }}
+    <meta name="robots" content="noindex"/>
+    <script>
+        var URL_LOGIN = '{% url 'custom_login' %}';
+    </script>
+    <style>
+        form .form-group {
+            display:inline-block;max-width: 400px; width:100%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <form style="text-align: center;">
+        <div class="form-group" id="username-group">
+            <div class="form-floating">
+              <input required class="form-control" type="text" name="username" id="id_for_label_username">
+              <label for="id_for_label_username" class="form-label">Пользователь</label>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group" id="password-group">
+            <div class="form-floating">
+              <input required class="form-control" type="password" name="password" id="id_for_label_password">
+              <label for="id_for_label_password" class="form-label">Пароль</label>
+            </div>
+        </div>
+        <br><br>
+        <input class="btn btn-secondary" type="button" value="Войти" id="login_button"/>
+        <a style="decoration: none;" href="{{ google_auth_url }}" target="_blank" rel="nofollow">
+            <input class="btn btn-secondary" type="button" value="Войти через Google" onclick="window.onfocus = function(){window.location = '/';}"/>
+        </a>
+        <br><br>
+        <div id="login_bad_message" class="alert alert-danger d-none" role="alert"></div>
+    </form>
+{% endblock %}
+
+{% block end_of_body %}
+    <script>
+        $('#login_button').click(function(event) {
+            let form = event.target.form;
+            $.ajax({
+                url: URL_LOGIN,
+                headers: {
+                    "X-CSRFToken": CSRF_TOKEN,
+                },
+                dataType: 'json',
+                data: $(form).serialize(),
+                success: function(result) {
+                    if (result.success) {
+                        invert_status_fields(form);
+                        window.location = '/';
+                    } else {
+                        $('#login_bad_message').text('Неправильный пароль или пользователь не существует');
+                        $('#login_bad_message').removeClass('d-none');
+                    }
+                },
+                statusCode: {
+                    400: function(xhr) {
+                        clear_status_fields(form);
+                        set_invalid_field(form, xhr.responseJSON);
+                    },
+                },
+                method: "post"
+            });
+        });
+    </script>
+{% endblock %}

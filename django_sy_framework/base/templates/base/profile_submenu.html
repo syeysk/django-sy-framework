@@ -1,0 +1,20 @@
+<style>
+    .submenu a {
+        margin-left: 10px;
+        padding: 3px 5px;
+        border-radius: 3px;
+    }
+    .submenu a.active {
+        background-color: var(--bs-highlight-bg);
+        text-decoration: none;
+    }
+</style>
+<div class="submenu">
+    {% url 'custom_profile' as url %}
+    <a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">Профиль</a>
+    {% url 'custom_auth_tokens' as url %}
+    <a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">Токены для API</a>
+
+    {#<a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">Ресурсы</a>#}
+    {#<a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">Навыки</a>#}
+</div>

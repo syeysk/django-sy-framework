@@ -5,6 +5,11 @@
 {% block page_title %}Профиль{% endblock %}
 
 {% block content %}
+    <a href="{% url 'custom_logout' %}">
+        <input class="form-control" type="button" value="Выйти" style="width:inherit;position:absolute;top:41.6px;right:0;"/>
+    </a>
+    {% include 'base/profile_submenu.html' %}
+    <br>
     <form>
         <div id="username-group" class="mb-3 form-group">
             <div class="form-floating">
@@ -31,6 +36,7 @@
             </div>
         </div>
         <input type="button" class="btn btn-primary" value="Сохранить" id="btn_save_profile">
+        <input type="button" class="btn btn-danger" value="Удалить профиль" id="btn_delete_profile">
     </form>
     
     <script>

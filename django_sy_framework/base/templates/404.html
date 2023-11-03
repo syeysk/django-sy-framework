@@ -1,4 +1,5 @@
 {% extends 'template.html' %}
+{% load static %}
 
 {% block title %}404{% endblock %}
 
@@ -7,6 +8,6 @@
 {% block content %}
     <div style="text-align: center;">
         Страница не существует <br>
-        <img src="https://web.archive.org/web/20210909124748im_/https://i.kym-cdn.com/photos/images/newsfeed/000/210/941/1322796219001.png" width="250">
+        <img src="{% static 'base/logo_to_support_a_user.png' %}" width="250">
     </div>
 {% endblock %}

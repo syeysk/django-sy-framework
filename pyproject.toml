@@ -4,6 +4,6 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django_sy_framework"
-version = "0.1.6"
+version = "0.1.7"
 requires-python = ">=3.11"
 description = "framework for microservice's ecosystem"

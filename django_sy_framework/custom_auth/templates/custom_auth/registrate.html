@@ -1,0 +1,81 @@
+{% extends 'template.html' %}
+
+{% block title %}Регистрация{% endblock %}
+{% block page_title %}Регистрация{% endblock %}
+{% block start_of_head %}
+    {{ block.super }}
+    <meta name="robots" content="noindex"/>
+    <script>
+        var URL_REGISTRATION = '{% url 'custom_registration' %}';
+    </script>
+    <style>
+        form .form-group {
+            display:inline-block;max-width: 400px; width:100%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <form style="text-align: center;">
+        <a style="decoration: none;" href="{{ google_auth_url }}" target="_blank" rel="nofollow">
+            <input class="btn btn-secondary" type="button" value="Зарегистрироваться через Google" onclick="window.onfocus = function(){window.location = '/';}"/>
+        </a>
+        <br><br>
+        <div class="form-group" id="username-group">
+            <div class="form-floating">
+                <input required class="form-control" type="text" name="username" id="id_for_label_username">
+                <label for="id_for_label_username" class="col-sm-4 form-label">Пользователь:</label>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group" id="email-group">
+            <div class="form-floating">
+                <input required class="form-control" type="text" name="email" id="id_for_label_email">
+                <label for="id_for_label_email" class="col-sm-4 form-label">E-mail:</label>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group" id="password1-group">
+            <div class="form-floating">
+                <input required class="form-control" type="password" name="password1" id="id_for_label_password1">
+                <label for="id_for_label_password1" class="col-sm-4 form-label">Пароль:</label>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group" id="password2-group">
+            <div class="form-floating">
+                <input required class="form-control" type="password" name="password2" id="id_for_label_password2">
+                <label for="id_for_label_password2" class="col-sm-4 form-label">Повторите пароль:</label>
+            </div>
+        </div>
+        <br><br>
+        <input class="btn btn-secondary" type="button" value="Зарегистрироваться" id="registrate_button"/>
+    </form>
+{% endblock %}
+
+{% block end_of_body %}
+    <script>
+        $('#registrate_button').click(function(event) {
+            let form = event.target.form;
+            $.ajax({
+                url: URL_REGISTRATION,
+                headers: {
+                    "X-CSRFToken": CSRF_TOKEN,
+                },
+                dataType: 'json',
+                data: $(form).serialize(),
+                success: function(result) {
+                    invert_status_fields(form);
+                    window.location = '/';
+                },
+                statusCode: {
+                    400: function(xhr) {
+                        clear_status_fields(form);
+                        set_invalid_field(form, xhr.responseJSON);
+                    },
+                },
+                method: "post"
+            });
+        });
+    </script>
+{% endblock %}
