@@ -1,6 +1,7 @@
 from rest_framework import authentication
 
-from django_sy_framework.custom_auth.models import Token, get_hash
+from django_sy_framework.custom_auth.models import Token
+from django_sy_framework.custom_auth.utils.crypto import get_hash
 
 
 class TokenAuthentication(authentication.BaseAuthentication):

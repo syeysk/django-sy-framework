@@ -1,9 +1,19 @@
 import base64
+from hashlib import blake2b
+
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from django.conf import settings
+
+
+def get_hash(token: str, digest_size=64):
+    return blake2b(
+        token.encode('utf-8'),
+        digest_size=digest_size,
+        salt=settings.SALT.encode('utf-8'),
+    ).hexdigest()
 
 
 def create_fernet(key: bytes, salt: bytes) -> Fernet:

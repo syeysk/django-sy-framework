@@ -1,17 +1,6 @@
-from hashlib import blake2b
-
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-
-def get_hash(token: str):
-    return blake2b(
-        token.encode('utf-8'),
-        digest_size=64,
-        salt=settings.SALT.encode('utf-8'),
-    ).hexdigest()
 
 
 class CustomAuthUser(AbstractUser):
@@ -32,3 +21,11 @@ class Token(models.Model):
         db_table = 'app_custom_auth_token'
         verbose_name = 'Токен'
         verbose_name_plural = 'Токены'
+
+
+class TempTokenModel(models.Model):
+    user_hash = models.CharField(max_length=32, null=False, blank=False)
+    temp_token = models.CharField(max_length=32, null=False, blank=False)
+    public_key = models.TextField(max_length=10000, null=False, blank=False)
+    private_key = models.TextField(max_length=10000, null=False, blank=False)
+    auth_public_key = models.TextField(max_length=10000, null=False, blank=False)

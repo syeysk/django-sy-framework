@@ -165,5 +165,5 @@
     {% block end_of_body %}{% endblock %}
     <!--<script src="https://getbootstrap.com/docs/3.4/assets/js/ie10-viewport-bug-workaround.js"></script>-->
     <script src="{% static 'base/extern/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
-    {% if not request.user.is_authenticated %}<script src="{% static 'base/auth.js' %}"></script>{% endif %}
+    {% if not request.user.is_authenticated %}<script src="{% static 'base/auth.js' %}?v=1"></script>{% endif %}
 </body>

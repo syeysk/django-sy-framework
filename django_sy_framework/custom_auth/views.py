@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 
-from django_sy_framework.custom_auth.models import Token, get_hash
+from django_sy_framework.custom_auth.models import Token
 from django_sy_framework.custom_auth.serializers import (
     AddTokenSerializer,
     EditTokenSerializer,
@@ -19,6 +19,7 @@ from django_sy_framework.custom_auth.serializers import (
 )
 from django_sy_framework.custom_auth.backend import create_or_update_user
 from django_sy_framework.custom_auth.utils import microservice_auth_api
+from django_sy_framework.custom_auth.utils.crypto import get_hash
 
 
 def create_user(**user_data):

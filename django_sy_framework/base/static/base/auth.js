@@ -27,9 +27,11 @@ $('#login_button').click(function(event) {
                 $('#login_bad_message').removeClass('d-none');
             }
         },
-        error: function(jqxhr, a, b) {
-            console.log('error');
-            console.log(jqxhr.responseText);
+        statusCode: {
+            400: function(xhr) {
+                clear_status_fields(form);
+                set_invalid_field(form, xhr.responseJSON);
+            },
         },
         method: "post"
     });
