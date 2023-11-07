@@ -26,7 +26,7 @@
 
     <link rel="stylesheet" href="{% static 'base/sticky-footer.css' %}">
     <!--<script src="https://getbootstrap.com/docs/3.4/assets/js/ie-emulation-modes-warning.js"></script>-->
-    <link rel="stylesheet" href="{% static 'base/base.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'base/base.css' %}?v=3">
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
         var IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
@@ -42,12 +42,6 @@
                 <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" style="padding:5px">
                   <img src="{% static 'logo.svg' %}" title="Главная страница" alt="логотип микросервиса" style="height:30px;">
                 </a>
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{% block menu_microservice_name %}Microservice menu{% endblock %}</a>
-                <ul class="dropdown-menu">
-                    {% block menu_items_microservice %}{% endblock %}
-                </ul>
             </li>
             {% url 'microservices' as url %}
             <li class="nav-item">
@@ -65,13 +59,11 @@
                     </a>
                 </li>
             {% else %}
-                {% url 'custom_login_page' as url %}
                 <li class="nav-item">
-                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow">Войти</a>
-                </li>
-                {% url 'custom_registration_page' as url %}
-                <li class="nav-item">
-                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow">Регистрация</a>
+                   {% url 'custom_login_page' as url %}
+                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow" style="display:inline-block;">Войти</a>
+                    {% url 'custom_registration_page' as url %}
+                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow" style="display:inline-block;">Регистрация</a>
                 </li>
             {% endif %}
         </ul>

@@ -2,8 +2,12 @@
 {% load static %}
 
 {% block title %}404{% endblock %}
-
 {% block page_title %}404{% endblock %}
+
+{% block start_of_head %}
+    {{ block.super }}
+    <meta name="robots" content="noindex"/>
+{% endblock %}
 
 {% block content %}
     <div style="text-align: center;">

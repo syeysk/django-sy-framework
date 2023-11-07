@@ -5,9 +5,11 @@
 {% block page_title %}Профиль{% endblock %}
 
 {% block content %}
-    <a href="{% url 'custom_logout' %}">
-        <input class="form-control" type="button" value="Выйти" style="width:inherit;position:absolute;top:41.6px;right:0;"/>
-    </a>
+    <div style="position:relative;">
+        <a href="{% url 'custom_logout' %}" style="width:inherit;position:absolute;right:0;top:-2.5rem;">
+            <input class="form-control" type="button" value="Выйти"/>
+        </a>
+    </div>
     {% include 'base/profile_submenu.html' %}
     <br>
     <form>
