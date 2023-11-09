@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
+from syapi.exceptions import FieldsException
 
 from django_sy_framework.custom_auth.utils import microservice_auth_api
 
@@ -53,7 +54,13 @@ def create_or_update_user(**user_data) -> 'django_sy_framework.custom_auth.Custo
 
 class CustomAuthBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None):
-        user_data = microservice_auth_api.login(username, password)
+        auth_user = microservice_auth_api.get_auth_user()
+        try:
+            user_data = auth_user.login(username, password)
+        except FieldsException:
+            return
+
+        microservice_auth_api.save_auth_user(auth_user)
         if user_data:
             return create_or_update_user(username=username, **user_data)
 

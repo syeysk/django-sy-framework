@@ -9,7 +9,8 @@ from django.views import View
 from django.urls import reverse
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
+from rest_framework import serializers, status
+from syapi.exceptions import FieldsException
 
 from django_sy_framework.custom_auth.models import Token
 from django_sy_framework.custom_auth.serializers import (
@@ -60,13 +61,18 @@ class RegistrationView(APIView):
         serializer = RegistrationSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        user_data = microservice_auth_api.registrate(
-            username=data['username'],
-            password=data['password1'],
-            email=data['email'],
-            first_name='',
-            last_name='',
-        )
+
+        try:
+            auth_user = microservice_auth_api.get_auth_user()
+            user_data = auth_user.registrate(data['username'], data['password1'], data['email'])
+            microservice_auth_api.save_auth_user(auth_user)
+        except FieldsException as error:
+            errors = error.errors
+            if 'password' in errors:
+                errors['password1'] = errors['password2'] = errors.pop('password')
+
+            raise serializers.ValidationError(errors)
+
         if not user_data:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={})
         elif 'microservice_auth_id' not in user_data:

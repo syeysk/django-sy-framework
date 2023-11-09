@@ -3,11 +3,12 @@ from subprocess import check_output
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import View
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from syapi.exceptions import AccessDeniedException, FieldsException
 
 from django_sy_framework.base.serializers import ProfileViewSerializer
 from django_sy_framework.custom_auth.utils import microservice_auth_api
@@ -31,7 +32,12 @@ class RobotsTxtView(View):
 
 class ProfileView(LoginRequiredMixin, APIView):
     def get(self, request):
-        user_data = microservice_auth_api.get(microservice_auth_id=request.user.microservice_auth_id)
+        try:
+            user_data = microservice_auth_api.get_auth_user(request.user.microservice_auth_id).get()
+        except AccessDeniedException:
+            logout(request)
+            return redirect('custom_login_page')
+
         context = {'user_data': user_data}
         return render(request, 'base/profile.html', context)
 
@@ -41,7 +47,12 @@ class ProfileView(LoginRequiredMixin, APIView):
         data = serializer.validated_data
 
         user = request.user
-        updated_fields = microservice_auth_api.edit(microservice_auth_id=user.microservice_auth_id, **data)
+        try:
+            updated_fields = (
+                microservice_auth_api.get_auth_user(user.microservice_auth_id).put(**data)['updated_fields']
+            )
+        except FieldsException as error:
+            raise serializers.ValidationError(error.errors)
 
         if 'first_name' in updated_fields:
             user.first_name = data['first_name']
@@ -60,7 +71,7 @@ class ProfileView(LoginRequiredMixin, APIView):
 
     def delete(self, request):
         user = request.user
-        success = microservice_auth_api.delete_user(microservice_auth_id=user.microservice_auth_id)
+        success = microservice_auth_api.get_auth_user(user.microservice_auth_id).delete()
         if not success:
             return Response(status=status.HTTP_201_CREATED, data={'success': False})
 
