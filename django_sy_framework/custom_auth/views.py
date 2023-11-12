@@ -114,34 +114,54 @@ class ExternAuthGoogleView(APIView):
             return render(request, 'base/message.html', context)
 
         # Авторизуемся через Google, получив в ответ данные пользователя
-        params = {
-            'access_token': access_token,
-            'id_token': data['id_token'],
-            'token_type': 'Bearer',
-            'expires_in': 3599,
-        }
-        response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo', params=params)
-        user_info = response.json()
-        if not user_info['verified_email']:
-            context = {'success': False, 'title': 'Ошибка авторизации через Google', 'message': 'E-mail в учётной записи Google не подтверждён. Пожалуйста, подтвердите e-mail и попробуйте авторизоваться вновь.'}
-            return render(request, 'base/message.html', context)
 
-        # создаём глобального и локального пользователя на Платформе
-
-        user_data = microservice_auth_api.login_or_registrate_by_extern_service(
-            username_for_new_user='{}-{}'.format(user_info['email'].split('@')[0], user_info['id'][-10:]),
-            email=user_info['email'],
-            first_name=user_info.get('given_name', ''),
-            last_name=user_info.get('family_name', ''),
-            extern_id='google-{}'.format(user_info['id']),
-        )
-        if not user_data:
-            context = {
-                'success': False,
-                'title': 'Ошибка авторизации через Google',
-                'message': 'Не удалось авторизоваться через Google',
+        if settings.MICROSERVICES_TOKENS.get('to_auth'):
+            params = {
+                'access_token': access_token,
+                'id_token': data['id_token'],
+                'token_type': 'Bearer',
+                'expires_in': 3599,
             }
-            return render(request, 'base/message.html', context)
+            response = requests.get('https://www.googleapis.com/oauth2/v1/userinfo', params=params)
+            user_info = response.json()
+            if not user_info['verified_email']:
+                context = {'success': False, 'title': 'Ошибка авторизации через Google', 'message': 'E-mail в учётной записи Google не подтверждён. Пожалуйста, подтвердите e-mail и попробуйте авторизоваться вновь.'}
+                return render(request, 'base/message.html', context)
+
+            # создаём глобального и локального пользователя на Платформе
+
+            user_data = microservice_auth_api.login_or_registrate_by_extern_service(
+                username_for_new_user='{}-{}'.format(user_info['email'].split('@')[0], user_info['id'][-10:]),
+                email=user_info['email'],
+                first_name=user_info.get('given_name', ''),
+                last_name=user_info.get('family_name', ''),
+                extern_id='google-{}'.format(user_info['id']),
+            )
+            if not user_data:
+                context = {
+                    'success': False,
+                    'title': 'Ошибка авторизации через Google',
+                    'message': 'Не удалось авторизоваться через Google',
+                }
+                return render(request, 'base/message.html', context)
+        else:
+            try:
+                auth_user = microservice_auth_api.get_auth_user()
+                user_data = auth_user.login_or_registrate_by_extern(
+                    'google',
+                    access_token,
+                    extra={'id_token': data['id_token']},
+                )
+                microservice_auth_api.save_auth_user(auth_user)
+            except FieldsException as error:
+                context = {
+                    'success': False,
+                    'title': 'Ошибка авторизации через Google',
+                    'message': error.errors['message'],
+                }
+                return render(request, 'base/message.html', context)
+
+            # создаём глобального и локального пользователя на Платформе
 
         user = create_or_update_user(**user_data)
         login(request, user)

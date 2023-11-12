@@ -74,6 +74,6 @@ def login_or_registrate_by_extern_service(
         'old_token': settings.MICROSERVICES_TOKENS['to_auth']
     }
     auth_user = get_auth_user()
-    response_data = auth_user.login_or_registrate_by_extern(**data)
+    response_data = auth_user.login_or_registrate_by_extern_old(**data)
     save_auth_user(auth_user)
     return response_data
