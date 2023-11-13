@@ -157,7 +157,7 @@ class ExternAuthGoogleView(APIView):
                 context = {
                     'success': False,
                     'title': 'Ошибка авторизации через Google',
-                    'message': error.errors['message'],
+                    'message': str(error.errors),
                 }
                 return render(request, 'base/message.html', context)
 
