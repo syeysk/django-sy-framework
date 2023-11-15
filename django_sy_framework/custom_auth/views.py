@@ -10,6 +10,7 @@ from django.urls import reverse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers, status
+from requests.exceptions import ConnectionError
 from syapi.exceptions import FieldsException
 
 from django_sy_framework.custom_auth.models import Token
@@ -37,17 +38,22 @@ def create_user(**user_data):
 
 class LoginView(APIView):
     def post(self, request):
-        user = authenticate(
-            request,
-            username=request.POST['username'],
-            password=request.POST['password'],
-        )
-        data = {'success': False}
-        if user:
-            login(request, user)
-            data['success'] = True
+        try:
+            user = authenticate(
+                request,
+                username=request.POST['username'],
+                password=request.POST['password'],
+            )
+        except ConnectionError:
+            message = 'Сервер авторизации недоступен. Пожалуйста, попробуйте авторизоваться позднее'
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'non_field_errors': message})
 
-        return Response(status=status.HTTP_200_OK, data=data)
+        if not user:
+            message = 'Неправильный пароль или пользователь не существует'
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'non_field_errors': message})
+
+        login(request, user)
+        return Response(status=status.HTTP_200_OK, data={})
 
 
 class LogoutView(APIView):

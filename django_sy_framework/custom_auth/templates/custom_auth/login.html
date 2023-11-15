@@ -36,7 +36,7 @@
             <input class="btn btn-secondary" type="button" value="Войти через Google" onclick="window.onfocus = function(){window.location = '/';}"/>
         </a>
         <br><br>
-        <div id="login_bad_message" class="alert alert-danger d-none" role="alert"></div>
+        <div class="alert alert-danger d-none non_field_errors" role="alert"></div>
     </form>
 {% endblock %}
 
@@ -52,13 +52,8 @@
                 dataType: 'json',
                 data: $(form).serialize(),
                 success: function(result) {
-                    if (result.success) {
-                        invert_status_fields(form);
-                        window.location = '/';
-                    } else {
-                        $('#login_bad_message').text('Неправильный пароль или пользователь не существует');
-                        $('#login_bad_message').removeClass('d-none');
-                    }
+                    invert_status_fields(form);
+                    window.location = '/';
                 },
                 statusCode: {
                     400: function(xhr) {

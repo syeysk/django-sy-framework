@@ -726,6 +726,8 @@ function toggle_password(img, field) {
 
 /* Изменения от 2023-03-06 */
 function clear_status_fields(form) {
+    $(form).find('.non_field_errors').addClass('d-none');
+    $(form).find('.non_field_errors .help-block').remove();
     for (let field of form.elements) {
         $(form).find('#'+field.name+'-group .help-block').remove();
         $(form[field.name]).removeClass("is-invalid");
@@ -760,9 +762,17 @@ function set_valid_field(form, field_names) {
 
 function set_invalid_field(form, errors) {
     for (let field_name in errors) {
-        $(form[field_name]).addClass("is-invalid");
+        if (field_name == 'non_field_errors') {
+            let non_field_errors = $(form).find('.non_field_errors')
+            non_field_errors.append(
+               '<div class="help-block">' + errors[field_name] + '</div>'
+            );
+            non_field_errors.removeClass('d-none');
+            continue;
+        }
+        $(form[field_name]).addClass('is-invali');
         $(form).find('#'+field_name+'-group').append(
-           '<div class="help-block">' + errors[field_name] + "</div>"
+           '<div class="help-block">' + errors[field_name] + '</div>'
         );
     }
 }
