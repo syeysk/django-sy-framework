@@ -1,11 +1,8 @@
 import requests
-from secrets import token_urlsafe
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.shortcuts import render
-from django.views import View
 from django.urls import reverse
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,15 +10,11 @@ from rest_framework import serializers, status
 from requests.exceptions import ConnectionError
 from syapi.exceptions import FieldsException
 
-from django_sy_framework.custom_auth.models import Token
 from django_sy_framework.custom_auth.serializers import (
-    AddTokenSerializer,
-    EditTokenSerializer,
     RegistrationSerializer,
 )
 from django_sy_framework.custom_auth.backend import create_or_update_user
 from django_sy_framework.custom_auth.utils import microservice_auth_api
-from django_sy_framework.custom_auth.utils.crypto import get_hash
 
 
 def create_user(**user_data):
@@ -173,48 +166,3 @@ class ExternAuthGoogleView(APIView):
         login(request, user)
         context = {'success': True, 'title': 'Успешная авторизация через Google', 'message': 'Вы успешно авторизовались на сайте через Google. Теперь Вам доступны все возможности сервера'}
         return render(request, 'base/message.html', context)
-
-
-class TokenView(LoginRequiredMixin, View):
-    def get(self, request):
-        tokens = Token.objects.filter(user=request.user).values('id', 'app_name')
-        context = {'tokens': list(tokens)}
-        return render(request, 'custom_auth/tokens.html', context=context)
-
-
-class AddTokenView(LoginRequiredMixin, APIView):
-    def post(self, request):
-        serializer = AddTokenSerializer(data=request.POST)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-
-        token_str_source = token_urlsafe(64)
-        token_str_hashed = get_hash(token_str_source)
-        token = Token(user=request.user, app_name=data['app_name'], token=token_str_hashed)
-        token.save()
-        data_for_response = {
-            'id': token.pk,
-            'token': token_str_source,
-        }
-        return Response(status=status.HTTP_200_OK, data=data_for_response)
-        
-
-class EditTokenView(LoginRequiredMixin, APIView):
-    def post(self, request):
-        serializer = EditTokenSerializer(data=request.POST)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        
-        token = Token.objects.get(user=request.user, pk=data['token_id'])
-        token.app_name = data['app_name']
-        token.save()
-        data_for_response = {}
-        return Response(status=status.HTTP_200_OK, data=data_for_response)
-
-
-class DeleteTokenView(LoginRequiredMixin, APIView):
-    def post(self, request, pk):
-        token = Token.objects.get(user=request.user, pk=pk)
-        token.delete()
-        data_for_response = {}
-        return Response(status=status.HTTP_200_OK, data=data_for_response)

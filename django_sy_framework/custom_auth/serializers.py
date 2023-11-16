@@ -27,12 +27,3 @@ class RegistrationSerializer(serializers.Serializer):
     password2 = serializers.CharField(min_length=10, max_length=50)
     username = serializers.SlugField(min_length=1, max_length=50)
     email = serializers.EmailField(min_length=3, max_length=50)
-
-
-class AddTokenSerializer(serializers.Serializer):
-    app_name = serializers.CharField(min_length=1, max_length=20)
-
-
-class EditTokenSerializer(serializers.Serializer):
-    app_name = serializers.CharField(min_length=1, max_length=20)
-    token_id = serializers.IntegerField(min_value=1)
