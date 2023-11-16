@@ -20,8 +20,8 @@ class LinkerView(APIView):
     @extend_schema(
         tags=['Привязка объектов'],
         parameters=[
-            LinkerGetViewSerializer,
         ],
+        request=LinkerGetViewSerializer,
         responses={},
         description='Получает привязанные объекты',
         summary='Получить привязанные объекты',
@@ -73,8 +73,8 @@ class LinkerView(APIView):
     @extend_schema(
         tags=['Привязка объектов'],
         parameters=[
-            LinkerPutViewSerializer,
         ],
+        request=LinkerPutViewSerializer,
         responses={202: None},
         description='Привязывает несколько объектов к другому (например, несколько заметок к проекту)',
         summary='Привязать объекты',
