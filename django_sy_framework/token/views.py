@@ -1,5 +1,6 @@
 from secrets import token_urlsafe
 
+from django.contrib.auth import mixins
 from django.shortcuts import render
 from django.views import View
 from rest_framework.authentication import SessionAuthentication
@@ -28,14 +29,14 @@ class LoginRequiredMixin:
     permission_classes = [CheckIsUsernNotAnonymousUser]
 
 
-class TokenView(LoginRequiredMixin, View):
+class TokenView(mixins.LoginRequiredMixin, View):
     def get(self, request):
         tokens = Token.objects.filter(user=request.user).values('id', 'app_name')
         context = {'tokens': list(tokens)}
         return render(request, 'token/tokens.html', context=context)
 
 
-class AddTokenView(LoginRequiredMixin, APIView):
+class AddTokenView(mixins.LoginRequiredMixin, APIView):
     def post(self, request):
         serializer = AddTokenSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
@@ -52,7 +53,7 @@ class AddTokenView(LoginRequiredMixin, APIView):
         return Response(status=status.HTTP_200_OK, data=data_for_response)
 
 
-class EditTokenView(LoginRequiredMixin, APIView):
+class EditTokenView(mixins.LoginRequiredMixin, APIView):
     def post(self, request):
         serializer = EditTokenSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
@@ -65,7 +66,7 @@ class EditTokenView(LoginRequiredMixin, APIView):
         return Response(status=status.HTTP_200_OK, data=data_for_response)
 
 
-class DeleteTokenView(LoginRequiredMixin, APIView):
+class DeleteTokenView(mixins.LoginRequiredMixin, APIView):
     def post(self, request, pk):
         token = Token.objects.get(user=request.user, pk=pk)
         token.delete()
