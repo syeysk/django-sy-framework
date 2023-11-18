@@ -26,3 +26,12 @@ ul.nav {
         padding: var(--bs-nav-link-padding-y) 0.25rem;
     }
 }
+
+/* for FieldEditorComponent */
+.btn_edit {
+    font-size: 10px;
+    background-color: paleturquoise;
+    cursor: pointer;
+    padding: 2px 4px 2px 4px;
+    border-radius: 3px;
+}
