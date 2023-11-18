@@ -51,29 +51,3 @@ def get_auth_user(microservice_auth_id=None):
             }
 
     return auth.User(url=settings.MICROSERVICES_URLS['auth'], **auth_data)
-
-
-def login_or_registrate_by_extern_service(
-    username_for_new_user: str,
-    email: str,
-    first_name: str,
-    last_name: str,
-    extern_id: str,
-) -> dict:
-    """
-    Выполняет авторизацию пользователя через внешний сервис. Например, Google.
-    Если пользователя не существует - регистрирует.
-    В случае успеха возвращает словарь с данными пользователя
-    """
-    data = {
-        'username': username_for_new_user,
-        'email': email,
-        'first_name': first_name,
-        'last_name': last_name,
-        'extern_id': extern_id,
-        'old_token': settings.MICROSERVICES_TOKENS['to_auth']
-    }
-    auth_user = get_auth_user()
-    response_data = auth_user.login_or_registrate_by_extern_old(**data)
-    save_auth_user(auth_user)
-    return response_data
