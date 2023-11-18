@@ -31,7 +31,7 @@ class LinkerGetViewSerializer(serializers.Serializer):
             max_length=50,
         ),
         allow_null=False,
-        default=list(['-pk']),
+        default=list(['id']),
     )
     extra_fields = serializers.ListSerializer(
         help_text='Возвращаемые поля (на уровне Питона, а не базы)',

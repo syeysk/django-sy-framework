@@ -9,14 +9,10 @@ from rest_framework import status
 from django_sy_framework.linker.models import Linker
 from django_sy_framework.linker.serializers import LinkerGetViewSerializer, LinkerPutViewSerializer
 from django_sy_framework.linker.utils import link_instances
-from django_sy_framework.utils.authentication import AnonymousTokenAuthentication
-from django_sy_framework.utils.permissions import IsRequestFromMicroservice
+from django_sy_framework.token.views import AllowAnyMixin
 
 
-class LinkerView(APIView):
-    authentication_classes = [AnonymousTokenAuthentication]
-    permission_classes = [IsRequestFromMicroservice]
-
+class LinkerGetView(AllowAnyMixin, APIView):
     @extend_schema(
         tags=['Привязка объектов'],
         parameters=[
@@ -70,6 +66,8 @@ class LinkerView(APIView):
         }
         return Response(status=status.HTTP_200_OK, data=response_data)
 
+
+class LinkerCreateView(AllowAnyMixin, APIView):
     @extend_schema(
         tags=['Привязка объектов'],
         parameters=[
@@ -80,6 +78,10 @@ class LinkerView(APIView):
         summary='Привязать объекты',
     )
     def put(self, request, link_to: str, link_to_id: int):
+        from django.conf import settings
+        if request.data.get('old_token') not in set(settings.MICROSERVICES_TOKENS.values()):
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
         serializer = LinkerPutViewSerializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
         querysets = []
