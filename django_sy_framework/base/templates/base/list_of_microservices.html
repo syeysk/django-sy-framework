@@ -45,7 +45,13 @@
             <span>База знаний</span>
         </a>
 
-        <h2>Автоматизируйте взаимодействия людей и сервисов</h2>
+        <h2>Автоматизируйте взаимодействия сервисов и фабрик</h2>
+
+        <a href="https://resource.intera.space/" target="_blank" class="microservice" title="производство и распределение ресурсов">
+            <img src="https://resource.intera.space/static/logo.svg">
+            <br>
+            <span>Ресурсы и Фабрики</span>
+        </a>
 
         <a {% if request.user.is_authenticated %}href="https://bot.intera.space/social/"{% else %}href="https://bot.intera.space/" target="_blank"{% endif %} class="microservice" title="подключение ботов социальных сетей">
             <img src="https://bot.intera.space/static/logo.svg">
