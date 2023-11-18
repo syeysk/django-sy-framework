@@ -35,11 +35,11 @@ FieldEditorComponent = {
         <div v-if="mIsEdit">
             <component :is="nameEditorComponent" v-model="value" v-bind="$attrs" :name="name">[[verboseName]]</component>
             <div>
-								<span>[[ errorMessage ]]</span>
-								<br v-if="errorMessage">
-								<input type="button" value="Сохранить" @click="save" class="btn btn-primary">
-								<input type="button" value="Отменить" @click="cancel" class="btn btn-secondary" v-if="showCancelBtn">
-						</div>
+                <span>[[ errorMessage ]]</span>
+                <br v-if="errorMessage">
+                <input type="button" value="Сохранить" @click="save" class="btn btn-primary">
+                <input type="button" value="Отменить" @click="cancel" class="btn btn-secondary" v-if="showCancelBtn">
+            </div>
         </div>
         <div v-else>
             <component :is="nameViewerComponent" :value="modelValue">

@@ -770,7 +770,7 @@ function set_invalid_field(form, errors) {
             non_field_errors.removeClass('d-none');
             continue;
         }
-        $(form[field_name]).addClass('is-invali');
+        $(form[field_name]).addClass('is-invalid');
         $(form).find('#'+field_name+'-group').append(
            '<div class="help-block">' + errors[field_name] + '</div>'
         );
