@@ -191,7 +191,7 @@ function get_form_fields(form, ignore_fields) {
         }
         data[el.name] = value;
     }
-    else return data;
+    return data;
 }
 
 
