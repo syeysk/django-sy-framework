@@ -2,7 +2,7 @@
 Author: Polyakov Konstantin
 Licence: Domain Public
 
-You can use this code for everything! But be very carefull :)
+You can use this code for everything! But be very careful :)
 */
 
 function Request(method, url, post, async_func) {
@@ -62,7 +62,7 @@ function RA_raw(action, data, options) {
         } else if (!navigator.onLine) {
             if (options['func_fatal']) options['func_fatal']('Нет соединения с Интернет');
         } else {
-            if (options['func_fatal']) options['func_fatal']('Неизветсная ошибка');
+            if (options['func_fatal']) options['func_fatal']('Неизвестная ошибка');
         }
         if (window.grecaptcha && data['grecaptcha_widget_id']) grecaptcha.reset(data['grecaptcha_widget_id']); // сбрасываем капчу гугла
         if (options['wb_captcha_img']) wb_captcha_reload(options['wb_captcha_img']); // сбрасываем капчу websitebaker
@@ -89,32 +89,6 @@ function animate_element(el, name) {
     setTimeout(function() {el.classList.remove(name);}, 600);
 }
 
-function light_absent_fields(form, absent_fields) {
-    if (!form) return;
-    if (form.tagName !== 'FORM') {
-        if (form.form) form = form.form;
-        else from = form.closest(form);
-    }
-        
-	var i, field;
-/*	for (i = 0; i<absent_fields.length; i++) {
-		field = absent_fields[i];
-		field = form.elements[field];
-		if (field !== undefined) field.style.border = border;
-	}*/
-        if (form === null || form === undefined) return;
-        for (i = 0; i<form.elements.length; i++) {
-		field = form.elements[i];
-                if (field.type == 'button') continue;
-                if (absent_fields.indexOf(field.name) != -1) {field.style.border = '1px solid red'; field.style.background = '#ffe6e6';}
-		else {
-                    field.style.border = null; field.style.background = null;
-
-                    //field.style.border = '1px solid green'; field.style.background = '#e6ffe6';
-		}
-	}
-}
-
 function RA_ButtonProgress(action, data, button, sending_text, func_success, options) {
     sending_text = sending_text || "Отправляется...";
     show_button_message(button, sending_text)
@@ -124,13 +98,11 @@ function RA_ButtonProgress(action, data, button, sending_text, func_success, opt
     	func_success: function(res) {
             var timeout = res['timeout'] !== undefined ? res['timeout'] : 3000 ;
             show_button_message(button,  res['message'], timeout);
-            light_absent_fields(button, []) // уберём красноту с полей, если они до этого были неверными.
             if (func_success) func_success(res, options['arg_func_success']);
     	},
     	func_error: function(res) {
             show_button_message(button, 'ошибка: '+res['message']);
             animate_element(button, 'btn-err')
-            if (res['absent_fields'] !== undefined) light_absent_fields(button, res['absent_fields']);
             if (options['func_error']) options['func_error'](res, options['arg_func_error']);
     	},
     	func_fatal: function(res) {
@@ -186,62 +158,14 @@ function RA_Notification(action, data, func_success, options) {
     })
 }
 
-function FormTools() {}
-
-process_form_fields = {
-	'edit_page_visitcard': {
-		'visitcard': {
-			'fromForm': {
-				'transformValue': function(origin_value) {
-		            return document.getElementById('edit_page_visitcard').src;
-				},
-				// возвращает undefined или true в случае успеха.
-				'filterAfterTransform': function (value) {
-	                if (value == '') return 'Выберите визитку!';
-		            if (value.length > 1024*150) return 'Визитка должна быть < 100 Кб ! Ваш размер: '+(value.length/1024);
-				}
-			}
-		}
-	}
-};
-
-function proccess_value(value, name, form, direction) {
-	var ret = [value, undefined];
-
-   	if (form.name === undefined) return ret;
-	if (process_form_fields[form.name] === undefined) return ret;
-	if (process_form_fields[form.name][name] === undefined) return ret;
-	if (process_form_fields[form.name][name][direction] === undefined) return ret;
-	var pff = process_form_fields[form.name][name][direction];
-
-    var results = [];
-
-    if (direction == 'fromForm') {
-    
-		if (pff['filterBeforeTransform'] !== undefined) {
-			var result1 = pff['filterBeforeTransform'](value);
-			if (result1 !== undefined || result1 !== true) return [value, result1];
-		}
-		if (pff['transformValue'] !== undefined) value = pff['transformValue'](value);
-		if (pff['filterAfterTransform']  !== undefined) {
-			var result2 = pff['filterAfterTransform'](value);
-	    	if (result2 !== undefined || result2 !== true) return [value, result2];
-		}
-
-    }
-	
-	return [value, undefined];
-	
-}
 
 // можно передавать массивы в качестве значения
-function get_form_fields(form, ignore_fields, use_filter) {
+function get_form_fields(form, ignore_fields) {
 	var el,
 	    value,
 	    data = {},
 	    ret;
 	ignore_fields = ignore_fields || [];
-	use_filter = use_filter || false;
 
 	for (var i = 0; i< form.elements.length; i+=1) {
 		el = form.elements[i];
@@ -251,14 +175,6 @@ function get_form_fields(form, ignore_fields, use_filter) {
     		if (el.type == 'checkbox' || el.type == 'radio') value = el.checked;//if (el.hasOwnProperty('checked')) value = el.checked;
    			else if (el.type == 'file') value = el.files;
    			else value = el.value;
-
-            // фильтрация и преобразования значения
-            if (use_filter) {
-	    		ret = proccess_value(value, el.name, form, 'fromForm')
-	    		if (ret[1] == undefined || ret[1] == true) value = ret[0];
-	    		else return {'data': data, 'is_error':true,  'error': ret[1]};
-            }
-
         } else { // если это коллекция элементов с одинаковым 'name'
    			value = [];
  			for (var j=0; j < form[el.name].length; j++ ) {
@@ -275,37 +191,9 @@ function get_form_fields(form, ignore_fields, use_filter) {
         }
         data[el.name] = value;
     }
-
-    if (use_filter) return {'data': data, 'is_error':false};
     else return data;
 }
 
-function set_form_fields(data, form) {
-	function normalize_boolean(value) {
-	    if (value == 'true') return true;
-	    else if (value == 'false') return  false;
-	    else return value;		
-	}
-	
-	var name, value, el;
-	for (name in data) {
-		//if (data.hasOwnProperty(name)) continue;
-        if (form[name] === undefined) continue;
-		value = data[name];
-		el = form[name];
-		if (el.tagName !== undefined) {
-			if (el.type == 'checkbox' || el.type == 'radio') 
-			    el.checked = normalize_boolean(data[name]);
-			else { el.value = data[name]; }
-		} else {
-			for (var j = 0; j<el.length; j++) {
-				if (el[0].checked !== undefined) {
-					if (data[name].indexOf(el[j].value) != -1) el[j].checked = true;
-				} else { el[j].value = data[name][j]; }
-			}
-		}
-    }
-}
 
 function Tabs(headers_id, content_id, styles) {
 	var self = this;
@@ -521,7 +409,7 @@ function ContextMenu(id, items) {
 }
 
 /**
- * Запускает скрипты в коде html, вставленнном в страницу.
+ * Запускает скрипты в коде html, вставленном в страницу.
  */
 function run_inserted_scripts(tag) {
    	var ss = tag.getElementsByTagName("SCRIPT")
@@ -544,8 +432,6 @@ function get_tab_content(tab_name, content_name, args, options) {
 	options = options || [];
 	options['tag_content'] = options['tag_content'] || document.getElementById("tab_content");
 	options['backup'] = options['backup'] === undefined ? true : options['backup'];
-	
-	if (typeof clear_pager !== 'undefined') clear_pager();
 
 	args = args || {}
 	options['tag_content'].innerHTML = 'грузим... :)';
@@ -603,49 +489,19 @@ function show_tab(tab_name, args, content_name) {
 }
 
 
-/* начало паджинатора */
-
-function clear_pager(offset, count, nav) {
-	if (nav === undefined) nav = document.getElementById('bottom');
-	if (!nav) return;
-    //while(nav.children.length != 2) nav.children[2].remove();
-    var for_del = [];
-    for(var i = 0; i < nav.children.length; i += 1) {
-    	if (nav.children[i].className == 'num_page') for_del.push(nav.children[i]);
-    }
-
-    for(var i = 0; i < for_del.length; i += 1) for_del[i].remove();
-	
-};
-
-/* конец паджинатора */
-
 function show_image(input, img) {
-
     var reader = new FileReader();
-
     reader.onload = function(event) {
-
         var image_data = event.target.result;
-
         if (img.src) {
-
             img.dataset.url = img.src;
-
             img.src = image_data;
-
         } else {
-
             img.dataset.url = img.style.backgroundImage;
-
             img.style.backgroundImage = "url(" +image_data+ ")";
-
         }
-
     };
-
     reader.readAsDataURL(input.files[0])
-
 }
 
 function content_by_api(api, tag, options) {
