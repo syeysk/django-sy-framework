@@ -34,11 +34,11 @@ class LoginView(APIView):
         try:
             user = authenticate(
                 request,
-                username=request.POST['username'],
+                email=request.POST['email'],
                 password=request.POST['password'],
             )
         except ConnectionError:
-            message = 'Сервер авторизации недоступен. Пожалуйста, попробуйте авторизоваться позднее'
+            message = 'Авторизация временно недоступна, пожалуйста, попробуйте авторизоваться позднее'
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'non_field_errors': message})
 
         if not user:

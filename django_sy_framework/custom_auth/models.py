@@ -1,8 +1,20 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+from django_sy_framework.custom_auth.validators import UnicodeUsernameValidator
 
 
 class CustomAuthUser(AbstractUser):
+    USERNAME_FIELD = 'microservice_auth_id'
+    username_validator = UnicodeUsernameValidator()
+
+    username = models.CharField(
+        _('username'),
+        max_length=150,
+        help_text=_('Required. 150 characters or fewer. Letters, digits and ./+/-/_ only.'),
+        validators=[username_validator],
+    )
     microservice_auth_id = models.UUIDField(null=False, blank=False, unique=True)
 
     class Meta(AbstractUser.Meta):
