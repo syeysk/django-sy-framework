@@ -43,10 +43,12 @@
                   <img src="{% static 'logo.svg' %}" title="Главная страница" alt="логотип микросервиса" style="height:30px;">
                 </a>
             </li>
-            {% url 'microservices' as url %}
-            <li class="nav-item">
-                <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow">Платформа</a>
-            </li>
+            {% block top_menu %}
+                {% url 'microservices' as url %}
+                <li class="nav-item">
+                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow">Платформа</a>
+                </li>
+            {% endblock %}
             {# {% url 'service_server' as url %}#}
             {#<li class="nav-item">#}
             {#    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Обслуживание сервера</a>#}
@@ -79,7 +81,7 @@
         <div style="display:flex; height: 99%; flex-direction: column; justify-content: center;">
             <div class="container" style="height: fit-content; display: flex;justify-content: space-between;">
                 <div>
-                    &copy;<!--&#8580;--> <a href="https://syeysk.ru" target="_blank">SYeysk</a>, 2023
+                    {% block author_code_link %}&copy;<!--&#8580;--> <a href="https://syeysk.ru" target="_blank">SYeysk</a>, 2023-2024{% endblock %}
                 </div>
                 <div>
                     {% block source_code_link %}<a href="https://github.com/syeysk/django-sy-framework" target="_blank">GitHub</a>{% endblock %}
