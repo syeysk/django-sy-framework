@@ -17,6 +17,9 @@ class CustomAuthUser(AbstractUser):
     )
     microservice_auth_id = models.UUIDField(null=False, blank=False, unique=True)
 
+    def __str__(self):
+        return f'<{self.microservice_auth_id}> {self.username}'
+
     class Meta(AbstractUser.Meta):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
