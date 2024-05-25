@@ -57,8 +57,8 @@
             <li class="nav-item">
                 {% if request.user.is_authenticated %}
                     {% url 'custom_profile' as url %}
-                    <a href="{{ url }}" class="nav-link{% if request.path == url or request.resolver_match.url_name == 'custom_auth_tokens' %} active{% endif %}" style="padding:5px;">
-                        <img src="{% static 'base/profile_human.svg' %}" title="{% translate "Profile" %}" alt="{% translate "a link to your profile" %}" style="height:30px;">
+                    <a href="{{ url }}" class="nav-link{% if request.path == url or request.resolver_match.url_name == 'custom_auth_tokens' %} active{% endif %}" style="padding:5px;display:inline-block;">
+                        <img src="{% static 'base/profile_human.svg' %}" title="{% translate 'Profile' %}" alt="{% translate 'a link to your profile' %}" style="height:30px;">
                     </a>
                 {% else %}
                     {% url 'custom_login_page' as url %}
