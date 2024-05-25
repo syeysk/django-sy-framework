@@ -1,13 +1,14 @@
 {% extends 'template.html' %}
+{% load i18n %}
 
-{% block title %}Профиль{% endblock %}
+{% block title %}{% translate "Profile" %}{% endblock %}
 
-{% block page_title %}Профиль{% endblock %}
+{% block page_title %}{% translate "Profile" %}{% endblock %}
 
 {% block content %}
     <div style="position:relative;">
         <a href="{% url 'custom_logout' %}" style="width:inherit;position:absolute;right:0;top:-2.5rem;">
-            <input class="form-control" type="button" value="Выйти"/>
+            <input class="form-control" type="button" value="{% translate 'Log out' %}"/>
         </a>
     </div>
     {% include 'base/profile_submenu.html' %}
@@ -15,30 +16,30 @@
     <form>
         <div id="username-group" class="mb-3 form-group">
             <div class="form-floating">
-                <input class="form-control" placeholder="имя пользователя" id="field_username" name="username" value="{{ user_data.username }}">
-                <label for="field_username">Пользователь</label>
+                <input class="form-control" placeholder="{% translate 'username' %}" id="field_username" name="username" value="{{ user_data.username }}">
+                <label for="field_username">{% translate "User" %}</label>
             </div>
         </div>
         <div id="email-group" class="mb-3 form-group">
             <div class="form-floating">
                 <input class="form-control" placeholder="e-mail" id="field_email" name="email" disabled value="{{ user_data.email }}">
-                <label for="field_email">E-mail</label>
+                <label for="field_email">{% translate 'E-mail' %}</label>
             </div>
         </div>
         <div id="first_name-group" class="mb-3 form-group">
             <div class="form-floating">
-                <input class="form-control" placeholder="имя" id="field_first_name" name="first_name" value="{{ user_data.first_name }}">
-                <label for="field_first_name">Имя</label>
+                <input class="form-control" placeholder="{% translate 'first name' %}" id="field_first_name" name="first_name" value="{{ user_data.first_name }}">
+                <label for="field_first_name">{% translate 'First name' %}</label>
             </div>
         </div>
         <div id="last_name-group" class="mb-3 form-group">
             <div class="form-floating">
-                <input class="form-control" placeholder="фамилия" id="field_last_name" name="last_name" value="{{ user_data.last_name }}">
-                <label for="field_last_name">Фамилия</label>
+                <input class="form-control" placeholder="{% translate 'last name' %}" id="field_last_name" name="last_name" value="{{ user_data.last_name }}">
+                <label for="field_last_name">{% translate 'Last name' %}</label>
             </div>
         </div>
-        <input type="button" class="btn btn-primary" value="Сохранить" id="btn_save_profile">
-        <input type="button" class="btn btn-danger" value="Удалить профиль" id="btn_delete_profile">
+        <input type="button" class="btn btn-primary" value="{% translate 'Save' %}" id="btn_save_profile">
+        <input type="button" class="btn btn-danger" value="{% translate 'Delete profile' %}" id="btn_delete_profile">
     </form>
     
     <script>

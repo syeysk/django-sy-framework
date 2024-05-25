@@ -1,7 +1,7 @@
 {% load static %}
 {% load i18n %}
 <!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE }}">
+<html lang="{{ user_lang_code }}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -66,27 +66,29 @@
                     {% url 'custom_registration_page' as url %}
                     <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow" style="display:inline-block;">{% translate "Sign up" %}</a>
                 {% endif %}
-                <form action="{% url 'set_language' %}" method="post" style="display: inline-block;">{% csrf_token %}
-                    <input name="next" type="hidden" value="{{ redirect_to }}">
-                    <input name="language" type="hidden" value="">
+                {% if is_i18n_on %}
+                    <form action="{% url 'set_language' %}" method="post" style="display: inline-block;">{% csrf_token %}
+                        <input name="next" type="hidden" value="{{ redirect_to }}">
+                        <input name="language" type="hidden" value="">
 
-                    {% get_current_language as LANGUAGE_CODE %}
-                    {% get_available_languages as LANGUAGES %}
-                    {% get_language_info_list for LANGUAGES as languages %}
-                    <div class="dropdown">
-                        <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                           <img src="{% static '/flags/' %}{{ LANGUAGE_CODE }}.jpg">
-                        </a>
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% get_language_info_list for LANGUAGES as languages %}
+                        <div class="dropdown">
+                            <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                               <img src="{% static '/flags/' %}{{ LANGUAGE_CODE }}.jpg">
+                            </a>
 
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            {% for language in languages %}
-                            <li onclick="this.closest('form').language.value = '{{ language.code }}'; this.closest('form').submit();">
-                                <a class="dropdown-item" href="#"><img src="{% static '/flags/' %}{{ language.code }}.jpg"> {{ language.name_local }} ({{ language.code }})</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </form>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                {% for language in languages %}
+                                <li onclick="this.closest('form').language.value = '{{ language.code }}'; this.closest('form').submit();">
+                                    <a class="dropdown-item" href="#"><img src="{% static '/flags/' %}{{ language.code }}.jpg"> {{ language.name_local }} ({{ language.code }})</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </form>
+                {% endif %}
             </li>
         </ul>
     </div>

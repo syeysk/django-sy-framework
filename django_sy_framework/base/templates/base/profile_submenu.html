@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <style>
     .submenu a {
         margin-left: 10px;
@@ -11,9 +13,9 @@
 </style>
 <div class="submenu">
     {% url 'custom_profile' as url %}
-    <a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">Профиль</a>
+    <a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">{% translate "Profile" %}</a>
     {% url 'custom_auth_tokens' as url %}
-    <a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">Токены для API</a>
+    <a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">{% translate "API tokens" %}</a>
 
     {#<a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">Ресурсы</a>#}
     {#<a href="{{ url }}" class="{% if request.path == url %} active{% endif %}">Навыки</a>#}

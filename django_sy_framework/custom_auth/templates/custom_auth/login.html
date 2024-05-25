@@ -1,7 +1,8 @@
 {% extends 'template.html' %}
+{% load i18n %}
 
-{% block title %}Авторизация{% endblock %}
-{% block page_title %}Авторизация{% endblock %}
+{% block title %}{% translate 'Signing in' %}{% endblock %}
+{% block page_title %}{% translate 'Signing in' %}{% endblock %}
 {% block start_of_head %}
     {{ block.super }}
     <meta name="robots" content="noindex"/>
@@ -20,20 +21,20 @@
         <div class="form-group" id="email-group">
             <div class="form-floating">
               <input required class="form-control" type="text" name="email" id="id_for_label_email">
-              <label for="id_for_label_email" class="form-label">Электронная почта</label>
+              <label for="id_for_label_email" class="form-label">{% translate 'E-mail' %}</label>
             </div>
         </div>
         <br><br>
         <div class="form-group" id="password-group">
             <div class="form-floating">
               <input required class="form-control" type="password" name="password" id="id_for_label_password">
-              <label for="id_for_label_password" class="form-label">Пароль</label>
+              <label for="id_for_label_password" class="form-label">{% translate 'Password' %}</label>
             </div>
         </div>
         <br><br>
-        <input class="btn btn-secondary" type="button" value="Войти" id="login_button"/>
+        <input class="btn btn-secondary" type="button" value="{% translate 'Sign in' %}" id="login_button"/>
         <a style="decoration: none;" href="{{ google_auth_url }}" target="_blank" rel="nofollow">
-            <input class="btn btn-secondary" type="button" value="Войти через Google" onclick="window.onfocus = function(){window.location = '/';}"/>
+            <input class="btn btn-secondary" type="button" value="{% translate 'Sign in using Google' %}" onclick="window.onfocus = function(){window.location = '/';}"/>
         </a>
         <br><br>
         <div class="alert alert-danger d-none non_field_errors" role="alert"></div>
