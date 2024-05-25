@@ -1,6 +1,7 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ request.LANGUAGE_CODE }}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,7 +41,7 @@
             {% url 'index' as url %}
             <li class="nav-item">
                 <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" style="padding:5px">
-                  <img src="{% static 'logo.svg' %}" title="Главная страница" alt="логотип микросервиса" style="height:30px;">
+                  <img src="{% static 'logo.svg' %}" title="{% translate "Main page" %}" alt="{% translate "microservice logo" %}" style="height:30px;">
                 </a>
             </li>
             {% block top_menu %}
@@ -53,21 +54,40 @@
             {#<li class="nav-item">#}
             {#    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}">Обслуживание сервера</a>#}
             {#</li>#}
-            {% if request.user.is_authenticated %}
-                {% url 'custom_profile' as url %}
-                <li class="nav-item">
+            <li class="nav-item">
+                {% if request.user.is_authenticated %}
+                    {% url 'custom_profile' as url %}
                     <a href="{{ url }}" class="nav-link{% if request.path == url or request.resolver_match.url_name == 'custom_auth_tokens' %} active{% endif %}" style="padding:5px;">
-                        <img src="{% static 'base/profile_human.svg' %}" title="Профиль" alt="ссылка на профиль" style="height:30px;">
+                        <img src="{% static 'base/profile_human.svg' %}" title="{% translate "Profile" %}" alt="{% translate "a link to your profile" %}" style="height:30px;">
                     </a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                   {% url 'custom_login_page' as url %}
-                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow" style="display:inline-block;">Войти</a>
+                {% else %}
+                    {% url 'custom_login_page' as url %}
+                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow" style="display:inline-block;">{% translate "Sign in" %}</a>
                     {% url 'custom_registration_page' as url %}
-                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow" style="display:inline-block;">Регистрация</a>
-                </li>
-            {% endif %}
+                    <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow" style="display:inline-block;">{% translate "Sign up" %}</a>
+                {% endif %}
+                <form action="{% url 'set_language' %}" method="post" style="display: inline-block;">{% csrf_token %}
+                    <input name="next" type="hidden" value="{{ redirect_to }}">
+                    <input name="language" type="hidden" value="">
+
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    <div class="dropdown">
+                        <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                           <img src="{% static '/flags/' %}{{ LANGUAGE_CODE }}.jpg">
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {% for language in languages %}
+                            <li onclick="this.closest('form').language.value = '{{ language.code }}'; this.closest('form').submit();">
+                                <a class="dropdown-item" href="#"><img src="{% static '/flags/' %}{{ language.code }}.jpg"> {{ language.name_local }} ({{ language.code }})</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </form>
+            </li>
         </ul>
     </div>
 
