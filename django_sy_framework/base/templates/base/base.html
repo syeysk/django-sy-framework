@@ -19,7 +19,7 @@
     <script src="{% static 'base/components.js' %}"></script>
 
     <link rel="stylesheet" href="{% static 'base/sticky-footer.css' %}">
-    <link rel="stylesheet" href="{% static 'base/base.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'base/base.css' %}?v=6">
     <script>
         var CSRF_TOKEN = '{{ csrf_token }}';
         var IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
@@ -60,7 +60,7 @@
                     <a href="{{ url }}" class="nav-link{% if request.path == url %} active{% endif %}" rel="nofollow" style="display:inline-block;">{% translate "Sign up" %}</a>
                 {% endif %}
                 {% if is_i18n_on %}
-                    <form action="{% url 'set_language' %}" method="post" style="display: inline-block;">{% csrf_token %}
+                    <form action="{% url 'set_language' %}" method="post" style="display: inline-block;margin-bottom: -1px;">{% csrf_token %}
                         <input name="next" type="hidden" value="{{ redirect_to }}">
                         <input name="language" type="hidden" value="">
 
