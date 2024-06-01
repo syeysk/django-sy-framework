@@ -67,7 +67,7 @@
                 data: $(form).serialize(),
                 success: function(result) {
                     invert_status_fields(form);
-                    window.location = '/';
+                    window.location = '{% url go_here_after_registration %}';
                 },
                 statusCode: {
                     400: function(xhr) {

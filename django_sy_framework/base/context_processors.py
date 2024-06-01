@@ -14,4 +14,6 @@ def settings_variables(request):
         'site_url': settings.SITE_URL,
         'is_i18n_on': is_i18n_on,
         'user_lang_code': request.LANGUAGE_CODE if is_i18n_on else settings.LANGUAGE_CODE,
+        'go_here_after_loging': settings.GO_HERE_AFTER_LOGING,
+        'go_here_after_registration': settings.GO_HERE_AFTER_REGISTRATION,
     }

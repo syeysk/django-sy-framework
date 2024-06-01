@@ -47,14 +47,12 @@
             let form = event.target.form;
             $.ajax({
                 url: URL_LOGIN,
-                headers: {
-                    "X-CSRFToken": CSRF_TOKEN,
-                },
+                headers: {"X-CSRFToken": CSRF_TOKEN},
                 dataType: 'json',
                 data: $(form).serialize(),
                 success: function(result) {
                     invert_status_fields(form);
-                    window.location = '/';
+                    window.location = '{% url go_here_after_loging %}';
                 },
                 statusCode: {
                     400: function(xhr) {
