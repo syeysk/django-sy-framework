@@ -16,12 +16,12 @@
     <script src="{% static 'base/extern/jquery-3.6.0.min.js' %}"></script>
     <link href="{% static 'base/extern/bootstrap.min.css' %}" rel="stylesheet" crossorigin="anonymous">
     <script src="{% static 'base/functions.js' %}?v=7"></script>
-    <script src="{% static 'base/windows.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'base/windows.css' %}">
+    <!-- <script src="{% static 'base/windows.js' %}"></script> -->
+    <!-- <link rel="stylesheet" href="{% static 'base/windows.css' %}"> -->
     {% if debug %}
-        <script src="{% static 'base/extern/vue.3.js' %}"></script>
+        <!--<script src="{% static 'base/extern/vue.3.js' %}"></script>-->
     {% else %}
-        <script src="{% static 'base/extern/vue.3.prod.js' %}"></script>
+        <!--<script src="{% static 'base/extern/vue.3.prod.js' %}"></script>-->
     {% endif %}
     <script src="{% static 'base/components.js' %}"></script>
 
@@ -32,6 +32,7 @@
         var CSRF_TOKEN = '{{ csrf_token }}';
         var IS_AUTHENTICATED = {% if request.user.is_authenticated %}true{% else %}false{% endif %};
         var STATIC_URL = '{% static '' %}'
+        var USER_LANG_CODE = '{{ user_lang_code }}'
     </script>
 </head>
 
