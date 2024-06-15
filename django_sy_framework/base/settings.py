@@ -9,3 +9,4 @@ AUTHENTICATION_BACKENDS = ['django_sy_framework.custom_auth.backend.CustomAuthBa
 LOGIN_URL = 'custom_login_page'
 GO_HERE_AFTER_LOGING = 'index'
 GO_HERE_AFTER_REGISTRATION = 'index'
+SHOW_NAV_HEADER_BLOCK = True

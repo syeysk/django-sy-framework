@@ -16,4 +16,5 @@ def settings_variables(request):
         'user_lang_code': request.LANGUAGE_CODE if is_i18n_on else settings.LANGUAGE_CODE,
         'go_here_after_loging': settings.GO_HERE_AFTER_LOGING,
         'go_here_after_registration': settings.GO_HERE_AFTER_REGISTRATION,
+        'show_nav_header_block': settings.SHOW_NAV_HEADER_BLOCK,
     }
