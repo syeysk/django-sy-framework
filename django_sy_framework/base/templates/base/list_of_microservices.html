@@ -21,9 +21,7 @@
 
     <div style="text-align: center;">
 
-        <!--<h2>Участвуйте в проектной деятельности</h2>-->
-
-        <h2>Решайте задачи максимально продуктивно</h2>
+        <h2>Взаимодействие людей</h2>
 
         <a {% if request.user.is_authenticated %}href="https://solveit.fun/faci/"{% else %}href="https://solveit.fun/" target="_blank"{% endif %} class="microservice" title="фасилитация встреч и фиксация решений">
             <img src="https://solveit.fun/static/logo.svg">
@@ -37,15 +35,15 @@
             <span>Страницы проектов</span>
         </a>
 
-        <h2>Сохраняйте и связывайте фантастические идеи</h2>
+        <h2>Хранение идей и мыслей</h2>
 
         <a {% if request.user.is_authenticated %}href="https://cachebrain.fun/note/"{% else %}href="https://cachebrain.fun/" target="_blank"{% endif %} class="microservice" title="хранение знаний, мыслей, конспектов в форме заметок">
-            <img src="https://cachebrain.fun/static/logo.svg">
+            <img src="https://notes.intera.space/static/logo.svg">
             <br>
             <span>База знаний</span>
         </a>
 
-        <h2>Автоматизируйте взаимодействия сервисов и фабрик</h2>
+        <h2>Взаимодействие производств</h2>
 
         <a href="https://resource.intera.space/" target="_blank" class="microservice" title="производство и распределение ресурсов">
             <img src="https://resource.intera.space/static/logo.svg">
